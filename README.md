@@ -3,7 +3,7 @@ A companion extension for Chromium-based browsers to expose websocket connection
 
 ### Purpose
 
-For Chromium-based browsers, WebSocket connections are not available to the [chrome.webRequest API](https://developer.chrome.com/extensions/webRequest). This companion extension (it's pointless to use it as a standalone) will enable uBlock Origin to become aware of WebSocket connection attempts.
+For Chromium-based browsers, WebSocket connections are not available to the [chrome.webRequest API](https://developer.chrome.com/extensions/webRequest). This companion extension (it's pointless to use it as a standalone) will allow uBlock Origin to become aware of WebSocket connection attempts: they can be filtered, and will be reported in the logger.
 
 Related: [Chromium issue 129353](https://bugs.chromium.org/p/chromium/issues/detail?id=129353).
 
