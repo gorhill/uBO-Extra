@@ -10,3 +10,5 @@ Related: [Chromium issue 129353](https://bugs.chromium.org/p/chromium/issues/det
 In fact, any extension which listens to network request through the chrome.webRequest API can gain the ability to see and act on WebSocket connections with this companion extensions.
 
 Currently known to work with uBlock Origin 1.7.2 and above.
+
+The extension has no interactive UI, just an icon in the toolbar to remind it's enabled. Your browser should allow you to hide the icon if it annoys you. Use uBlock Origin's logger if you want to see and possibly filter WebSocket connections.
