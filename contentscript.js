@@ -111,7 +111,7 @@ script.textContent = "\
         try {                                                            \n\
             wrapped = new Wrapped(bag.args.url, bag.args.protocols);     \n\
         } catch (ex) {                                                   \n\
-            console.error(ex);                                           \n\
+            console.error(ex.toString());                                \n\
         }                                                                \n\
         if ( wrapped === null ) {                                        \n\
             return;                                                      \n\
@@ -166,7 +166,7 @@ script.textContent = "\
         Object.defineProperties(this, {                                  \n\
             'binaryType': {                                              \n\
                 get: function() {                                        \n\
-                    return fallthruGet(this, 'binaryType', '');          \n\
+                    return fallthruGet(this, 'binaryType', 'blob');      \n\
                 },                                                       \n\
                 set: function(value) {                                   \n\
                     fallthruSet(this, 'binaryType', value);              \n\
