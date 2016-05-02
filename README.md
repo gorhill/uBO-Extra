@@ -9,4 +9,4 @@ Related: [Chromium issue 129353](https://bugs.chromium.org/p/chromium/issues/det
 
 In fact, any extension which listens to network request through the chrome.webRequest API can gain the ability to see and act on WebSocket connections with this companion extensions.
 
-Currently works known to work with uBlock Origin 1.7.2 and above.
+Currently known to work with uBlock Origin 1.7.2 and above.
