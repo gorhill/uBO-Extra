@@ -12,3 +12,7 @@ In fact, any extension which listens to network request through the chrome.webRe
 Currently known to work with uBlock Origin 1.7.2 and above.
 
 The extension has no interactive UI, just an icon in the toolbar to remind it's enabled. Your browser should allow you to hide the icon if it annoys you. Use uBlock Origin's logger if you want to see and possibly filter WebSocket connections.
+
+### Installation
+
+You can install manually using your browser's _"Load unpacked extension..."_ feature, or directly from the Chrome store: <https://chrome.google.com/webstore/detail/ublock-origin-websocket/pgdnlhfefecpicbbihgmbmffkjpaplco>.
