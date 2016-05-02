@@ -23,5 +23,5 @@
   "minimum_chrome_version": "36.0",
   "name": "uBlock Origin WebSocket",
   "short_name": "uBO-WebSocket",
-  "version": "1.0"
+  "version": "1.1"
 }
