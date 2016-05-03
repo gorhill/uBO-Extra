@@ -1,6 +1,10 @@
 # uBO-WebSocket
 A companion extension for Chromium-based browsers to expose websocket connections to [uBlock Origin](https://github.com/gorhill/uBlock).
 
+### Installation
+
+You can install manually using your browser's _"Load unpacked extension..."_ feature, or directly from the Chrome store: <https://chrome.google.com/webstore/detail/ublock-origin-websocket/pgdnlhfefecpicbbihgmbmffkjpaplco>.
+
 ### Purpose
 
 For Chromium-based browsers, WebSocket connections are not available to the [chrome.webRequest API](https://developer.chrome.com/extensions/webRequest). This companion extension (it's pointless to use it as a standalone) will allow uBlock Origin to become aware of WebSocket connection attempts: they can be filtered, and will be reported in the logger.
@@ -13,6 +17,9 @@ Currently known to work with uBlock Origin 1.7.2 and above.
 
 The extension has no interactive UI, just an icon in the toolbar to remind it's enabled. Your browser should allow you to hide the icon if it annoys you. Use uBlock Origin's logger if you want to see and possibly filter WebSocket connections.
 
-### Installation
+### Sites benefitting from WebSocket filtering
 
-You can install manually using your browser's _"Load unpacked extension..."_ feature, or directly from the Chrome store: <https://chrome.google.com/webstore/detail/ublock-origin-websocket/pgdnlhfefecpicbbihgmbmffkjpaplco>.
+I will add as I stumble on cases (feel free to add to the list through a pull request -- alphabetical order by domain name).
+
+- `opensubtitles.org` ([ref](https://forums.lanik.us/viewtopic.php?f=62&t=29304))
+- `watchseries.to` ([ref](https://forums.lanik.us/viewtopic.php?f=62&t=30068))
