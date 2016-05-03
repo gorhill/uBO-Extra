@@ -22,4 +22,4 @@ The extension has no interactive UI, just an icon in the toolbar to remind it's 
 I will add as I stumble on cases (feel free to add to the list through a pull request -- alphabetical order by domain name).
 
 - `opensubtitles.org` ([ref](https://forums.lanik.us/viewtopic.php?f=62&t=29304))
-- `watchseries.to` ([ref](https://forums.lanik.us/viewtopic.php?f=62&t=30068))
+- `thewatchseries.to` ([ref](https://forums.lanik.us/viewtopic.php?f=62&t=30068))
