@@ -23,3 +23,4 @@ I will add as I stumble on cases (feel free to add to the list through a pull re
 
 - `opensubtitles.org` ([ref](https://forums.lanik.us/viewtopic.php?f=62&t=29304))
 - `thewatchseries.to` ([ref](https://forums.lanik.us/viewtopic.php?f=62&t=30068))
+- adult sites ([ref](https://github.com/easylist/easylist/commit/61dfc7d8be32a7cb17c9ff75d3849f3c6ce77557), [ref](https://adblockplus.org/forum/viewtopic.php?f=1&t=46004))
