@@ -123,6 +123,7 @@ script.textContent = "\
             l = bag.listeners[i];                                        \n\
             wrapped.addEventListener(l.ev, l.cb, l.fl);                  \n\
         }                                                                \n\
+        Object.getPrototypeOf(wrapped).constructor = window.WebSocket;   \n\
         toWrapped.set(wrapper, wrapped);                                 \n\
     };                                                                   \n\
     var noopfn = function() {};                                          \n\
@@ -153,7 +154,6 @@ script.textContent = "\
         }                                                                \n\
     };                                                                   \n\
     var WebSocket = function(url, protocols) {                           \n\
-        'native';                                                        \n\
         if (                                                             \n\
             window.location.protocol === 'https:' &&                     \n\
             url.lastIndexOf('ws:', 0) === 0                              \n\
@@ -305,7 +305,7 @@ script.textContent = "\
     WebSocket.OPEN = 1;                                                  \n\
     WebSocket.CLOSING = 2;                                               \n\
     WebSocket.CLOSED = 3;                                                \n\
-    window.WebSocket = WebSocket;                                        \n\
+    window.WebSocket = WebSocket.bind(window);                           \n\
     var me = document.currentScript;                                     \n\
     if ( me && me.parentNode !== null ) {                                \n\
         me.parentNode.removeChild(me);                                   \n\
