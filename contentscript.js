@@ -72,8 +72,9 @@ if (
     return false;
 }
 
-// Only for http/https documents.
-if ( /^https?:/.test(window.location.protocol) !== true ) {
+// Only for dynamically created frames and http/https documents.
+if ( window.location.href !== "about:blank" &&
+     /^https?:/.test(window.location.protocol) !== true ) {
     return false;
 }
 
