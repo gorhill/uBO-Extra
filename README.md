@@ -1,26 +1,37 @@
-# uBO-WebSocket
-A companion extension for Chromium-based browsers to expose websocket connections to [uBlock Origin](https://github.com/gorhill/uBlock).
+# uBO-Extra
+
+A companion extension to [uBlock Origin](https://github.com/gorhill/uBlock): to gain ability to foil early anti-user mechanisms working around content blockers or even a browser privacy settings.
 
 ### Installation
 
-You can install manually using your browser's _"Load unpacked extension..."_ feature, or directly from the Chrome store: <https://chrome.google.com/webstore/detail/ublock-origin-websocket/pgdnlhfefecpicbbihgmbmffkjpaplco>.
+You can install manually using your browser's _"Load unpacked extension..."_ feature, or directly from the Chrome store: <https://chrome.google.com/webstore/detail/ublock-origin-extra/pgdnlhfefecpicbbihgmbmffkjpaplco>.
 
 ### Purpose
 
+To foil hostile anti-user mechanisms used to work around content blockers or even privacy settings in a browser.
+
+***
+
 For Chromium-based browsers, WebSocket connections are not available to the [chrome.webRequest API](https://developer.chrome.com/extensions/webRequest). This companion extension (it's pointless to use it as a standalone) will allow uBlock Origin to become aware of WebSocket connection attempts: they can be filtered, and will be reported in the logger.
 
-Related: [Chromium issue 129353](https://bugs.chromium.org/p/chromium/issues/detail?id=129353).
+Related issues:
 
-In fact, any extension which listens to network request through the chrome.webRequest API can gain the ability to see and act on WebSocket connections with this companion extensions.
+- <https://github.com/gorhill/uBlock/issues/1936>
+- <https://bugs.chromium.org/p/chromium/issues/detail?id=129353>
 
-Currently known to work with uBlock Origin 1.7.2 and above.
+***
 
-The extension has no interactive UI, just an icon in the toolbar to remind it's enabled. Your browser should allow you to hide the icon if it annoys you. Use uBlock Origin's logger if you want to see and possibly filter WebSocket connections.
+Instart Logic's technology used to disguise third-party network requests as first-party network requests, **including** cookie settings. I consider this to be extremely hostile to users, even those **not** using content blockers, as it allows 3rd-party servers to set cookies even if a user chose to block 3rd-party cookies.
 
-### Sites benefitting from WebSocket filtering
+The company behind the technology understand how hostile its technology is to users, and thus tries to hide what is being done by making it very difficult to investigate by detecting whether the browser's developer console is opened, and when it detects it is opened, it ceases completely to make use of the obfuscation mechanism. The developer console-detecting code works only for Chromium-based browsers however, and therefore the obfuscation technology is not used for when using Firefox (a different web page is served for Firefox).
 
-I will add as I stumble on cases (feel free to add to the list through a pull request -- alphabetical order by domain name).
+Related issues:
 
-- `opensubtitles.org` ([ref](https://forums.lanik.us/viewtopic.php?f=62&t=29304))
-- `thewatchseries.to` ([ref](https://forums.lanik.us/viewtopic.php?f=62&t=30068))
-- adult sites ([ref](https://github.com/easylist/easylist/commit/61dfc7d8be32a7cb17c9ff75d3849f3c6ce77557), [ref](https://adblockplus.org/forum/viewtopic.php?f=1&t=46004))
+- <https://github.com/uBlockOrigin/uAssets/issues/227>
+- <https://np.reddit.com/r/wow/comments/5exq2d/wowheadcom_sucking_bandwidth/>
+
+***
+
+The extension has no interactive UI, just an icon in the toolbar to remind it's enabled.
+
+Your browser should allow you to hide the icon if it annoys you. Use uBlock Origin's logger if you want to see and possibly filter WebSocket connections.

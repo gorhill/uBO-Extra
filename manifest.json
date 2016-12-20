@@ -15,14 +15,14 @@
       "all_frames": true
     }
   ],
-  "description": "A companion extension to uBlock Origin: this gives uBlock Origin the ability to see and filter WebSocket connection attempts.",
+  "description": "A companion extension to uBlock Origin: to gain ability to foil early hostile anti-user mechanisms working around content blockers.",
   "icons": {
     "16": "icon16.png",
     "128": "icon128.png"
   },
   "manifest_version": 2,
   "minimum_chrome_version": "36.0",
-  "name": "uBlock Origin WebSocket",
-  "short_name": "uBO-WebSocket",
-  "version": "1.1"
+  "name": "uBlock Origin Extra",
+  "short_name": "uBO-Extra",
+  "version": "2.0"
 }
