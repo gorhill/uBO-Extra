@@ -1,7 +1,8 @@
 /*******************************************************************************
 
-    uBO-WebSocket - a companion browser extension to reveal
-    WebSocket connection attempts to uBlock origin.
+    uBO-Extra - A companion extension to uBlock Origin: to gain ability to
+                foil early hostile anti-user mechanisms working around
+                content blockers.
     Copyright (C) 2016 Raymond Hill
 
     This program is free software: you can redistribute it and/or modify
@@ -22,305 +23,374 @@
 
 /* global HTMLDocument, XMLDocument */
 
-/******************************************************************************/
+/*******************************************************************************
+
+    All scriptlets to inject: the scriptlets to inject are to foil or work
+    around hostile anti-user mechanism used by some web sites.
+
+**/
+
+var scriptlets = [];
+
+/*******************************************************************************
+
+    Don't run on non-HTML documents.
+
+**/
+
+var isNotHTML = (function() {
+    'use strict';
+
+    var doc = document;
+    if ( doc instanceof HTMLDocument === false ) {
+        if (
+            doc instanceof XMLDocument === false ||
+            doc.createElement('div') instanceof HTMLDivElement === false
+        ) {
+            return true;
+        }
+    }
+    if ( (doc.contentType || '').lastIndexOf('image/', 0) === 0 ) {
+        return true; 
+    }
+    return false;
+})();
+
+/*******************************************************************************
+
+    Websocket abuse buster.
+
+    https://github.com/gorhill/uBlock/issues/1936
+
+**/
 
 (function() {
+    'use strict';
 
-'use strict';
+    if ( isNotHTML ) { return; }
 
-/******************************************************************************/
+    // https://bugs.chromium.org/p/chromium/issues/detail?id=129353
+    // https://github.com/gorhill/uBlock/issues/956
+    // https://github.com/gorhill/uBlock/issues/1497
+    // Trap calls to WebSocket constructor, and expose websocket-based network
+    // requests to uBO's filtering engine, logger, etc.
+    // Counterpart of following block of code is found in "vapi-background.js" --
+    // search for "https://github.com/gorhill/uBlock/issues/1497".
 
-var doc = document;
+    /* jshint multistr: true */
 
-// https://github.com/chrisaljoudi/uBlock/issues/464
-if ( doc instanceof HTMLDocument === false ) {
-    // https://github.com/chrisaljoudi/uBlock/issues/1528
-    // A XMLDocument can be a valid HTML document.
+    // https://github.com/gorhill/uBlock/issues/1604
+    //return;
+
+    // Fix won't be applied on older versions of Chromium.
     if (
-        doc instanceof XMLDocument === false ||
-        doc.createElement('div') instanceof HTMLDivElement === false
+        window.WebSocket instanceof Function === false ||
+        window.WeakMap instanceof Function === false
     ) {
         return false;
     }
-}
 
-// https://github.com/gorhill/uBlock/issues/1124
-// Looks like `contentType` is on track to be standardized:
-//   https://dom.spec.whatwg.org/#concept-document-content-type
-if ( (doc.contentType || '').lastIndexOf('image/', 0) === 0 ) {
-    return false; 
-}
+    // Only for dynamically created frames and http/https documents.
+    if ( /^(https?:|about:)/.test(window.location.protocol) !== true ) {
+        return false;
+    }
 
-// https://bugs.chromium.org/p/chromium/issues/detail?id=129353
-// https://github.com/gorhill/uBlock/issues/956
-// https://github.com/gorhill/uBlock/issues/1497
-// Trap calls to WebSocket constructor, and expose websocket-based network
-// requests to uBO's filtering engine, logger, etc.
-// Counterpart of following block of code is found in "vapi-background.js" --
-// search for "https://github.com/gorhill/uBlock/issues/1497".
+    var doc = document,
+        parent = doc.head || doc.documentElement;
+    if ( parent === null ) {
+        return false;
+    }
 
-/* jshint multistr: true */
+    // WebSocket reference: https://html.spec.whatwg.org/multipage/comms.html
+    // The script tag will remove itself from the DOM once it completes
+    // execution.
+    // Ideally, the `js/websocket.js` script would be declared as a
+    // `web_accessible_resources` in the manifest, but this unfortunately would
+    // open the door for web pages to identify *directly* that one is using
+    // uBlock Origin. Consequently, I have to inject the code as a literal
+    // string below :(
+    // For code review, the stringified code below is found in
+    // `js/websocket.js` (comments and empty lines were stripped).
+    var scriptlet = function() {
+        var Wrapped = window.WebSocket;
+        var toWrapped = new WeakMap();
+        var onResponseReceived = function(wrapper, ok) {
+            this.onload = this.onerror = null;
+            var bag = toWrapped.get(wrapper);
+            if ( !ok ) {
+                if ( bag.properties.onerror ) {
+                    bag.properties.onerror(new window.ErrorEvent('error'));
+                }
+                return;
+            }
+            var wrapped = null;
+            try {
+                wrapped = new Wrapped(bag.args.url, bag.args.protocols);
+            } catch (ex) {
+                console.error(ex.toString());
+            }
+            if ( wrapped === null ) {
+                return;
+            }
+            for ( var p in bag.properties ) {
+                wrapped[p] = bag.properties[p];
+            }
+            for ( var i = 0, l; i < bag.listeners.length; i++ ) {
+                l = bag.listeners[i];
+                wrapped.addEventListener(l.ev, l.cb, l.fl);
+            }
+            Object.getPrototypeOf(wrapped).constructor = window.WebSocket;
+            toWrapped.set(wrapper, wrapped);
+        };
+        var noopfn = function() {};
+        var fallthruGet = function(wrapper, prop, value) {
+            var wrapped = toWrapped.get(wrapper);
+            if ( !wrapped ) {
+                return value;
+            }
+            if ( wrapped instanceof Wrapped ) {
+                return wrapped[prop];
+            }
+            return wrapped.properties.hasOwnProperty(prop) ?
+                wrapped.properties[prop] :
+                value;
+        };
+        var fallthruSet = function(wrapper, prop, value) {
+            if ( value instanceof Function ) {
+                value = value.bind(wrapper);
+            }
+            var wrapped = toWrapped.get(wrapper);
+            if ( !wrapped ) {
+                return;
+            }
+            if ( wrapped instanceof Wrapped ) {
+                wrapped[prop] = value;
+            } else {
+                wrapped.properties[prop] = value;
+            }
+        };
+        var WebSocket = function(url, protocols) {
+            'native';
+            if (
+                window.location.protocol === 'https:' &&
+                url.lastIndexOf('ws:', 0) === 0
+            ) {
+                var ws = new Wrapped(url, protocols);
+                if ( ws ) {
+                    ws.close();
+                }
+            }
+            Object.defineProperties(this, {
+                'binaryType': {
+                    get: function() {
+                        return fallthruGet(this, 'binaryType', 'blob');
+                    },
+                    set: function(value) {
+                        fallthruSet(this, 'binaryType', value);
+                    }
+                },
+                'bufferedAmount': {
+                    get: function() {
+                        return fallthruGet(this, 'bufferedAmount', 0);
+                    },
+                    set: noopfn
+                },
+                'extensions': {
+                    get: function() {
+                        return fallthruGet(this, 'extensions', '');
+                    },
+                    set: noopfn
+                },
+                'onclose': {
+                    get: function() {
+                        return fallthruGet(this, 'onclose', null);
+                    },
+                    set: function(value) {
+                        fallthruSet(this, 'onclose', value);
+                    }
+                },
+                'onerror': {
+                    get: function() {
+                        return fallthruGet(this, 'onerror', null);
+                    },
+                    set: function(value) {
+                        fallthruSet(this, 'onerror', value);
+                    }
+                },
+                'onmessage': {
+                    get: function() {
+                        return fallthruGet(this, 'onmessage', null);
+                    },
+                    set: function(value) {
+                        fallthruSet(this, 'onmessage', value);
+                    }
+                },
+                'onopen': {
+                    get: function() {
+                        return fallthruGet(this, 'onopen', null);
+                    },
+                    set: function(value) {
+                        fallthruSet(this, 'onopen', value);
+                    }
+                },
+                'protocol': {
+                    get: function() {
+                        return fallthruGet(this, 'protocol', '');
+                    },
+                    set: noopfn
+                },
+                'readyState': {
+                    get: function() {
+                        return fallthruGet(this, 'readyState', 0);
+                    },
+                    set: noopfn
+                },
+                'url': {
+                    get: function() {
+                        return fallthruGet(this, 'url', '');
+                    },
+                    set: noopfn
+                }
+            });
+            toWrapped.set(this, {
+                args: { url: url, protocols: protocols },
+                listeners: [],
+                properties: {}
+            });
+            var img = new Image();
+            img.src = window.location.origin + 
+                '?url=' + encodeURIComponent(url) +
+                '&ubofix=f41665f3028c7fd10eecf573336216d3';
+            img.onload = onResponseReceived.bind(img, this, true);
+            img.onerror = onResponseReceived.bind(img, this, false);
+        };
+        WebSocket.prototype = Object.create(window.EventTarget.prototype, {
+            CONNECTING: { value: 0 },
+            OPEN: { value: 1 },
+            CLOSING: { value: 2 },
+            CLOSED: { value: 3 },
+            addEventListener: {
+                enumerable: true,
+                value: function(ev, cb, fl) {
+                    if ( cb instanceof Function === false ) {
+                        return;
+                    }
+                    var wrapped = toWrapped.get(this);
+                    if ( !wrapped ) {
+                        return;
+                    }
+                    var cbb = cb.bind(this);
+                    if ( wrapped instanceof Wrapped ) {
+                        wrapped.addEventListener(ev, cbb, fl);
+                    } else {
+                        wrapped.listeners.push({ ev: ev, cb: cbb, fl: fl });
+                    }
+                },
+                writable: true
+            },
+            close: {
+                enumerable: true,
+                value: function(code, reason) {
+                   'native';
+                    var wrapped = toWrapped.get(this);
+                    if ( wrapped instanceof Wrapped ) {
+                        wrapped.close(code, reason);
+                    }
+                },
+                writable: true
+            },
+            removeEventListener: {
+                enumerable: true,
+                value: function(ev, cb, fl) {
+                },
+                writable: true
+            },
+            send: {
+                enumerable: true,
+                value: function(data) {
+                    'native';
+                    var wrapped = toWrapped.get(this);
+                    if ( wrapped instanceof Wrapped ) {
+                        wrapped.send(data);
+                    }
+                },
+                writable: true
+            }
+        });
+        WebSocket.CONNECTING = 0;
+        WebSocket.OPEN = 1;
+        WebSocket.CLOSING = 2;
+        WebSocket.CLOSED = 3;
+        window.WebSocket = WebSocket;
+    };
 
-// https://github.com/gorhill/uBlock/issues/1604
-//return;
+    scriptlets.push(scriptlet);
+})();
 
-// Fix won't be applied on older versions of Chromium.
-if (
-    window.WebSocket instanceof Function === false ||
-    window.WeakMap instanceof Function === false
-) {
-    return false;
-}
+/*******************************************************************************
 
-// Only for dynamically created frames and http/https documents.
-if ( window.location.href !== "about:blank" &&
-     /^https?:/.test(window.location.protocol) !== true ) {
-    return false;
-}
+    Instart Logic buster
 
-var parent = doc.head || doc.documentElement;
-if ( parent === null ) {
-    return false;
-}
+    https://github.com/uBlockOrigin/uAssets/issues/227
 
-// WebSocket reference: https://html.spec.whatwg.org/multipage/comms.html
-// The script tag will remove itself from the DOM once it completes
-// execution.
-// Ideally, the `js/websocket.js` script would be declared as a
-// `web_accessible_resources` in the manifest, but this unfortunately would
-// open the door for web pages to identify *directly* that one is using
-// uBlock Origin. Consequently, I have to inject the code as a literal
-// string below :(
-// For code review, the stringified code below is found in
-// `js/websocket.js` (comments and empty lines were stripped).
-var script = doc.createElement('script');
-script.textContent = "\
-(function() {                                                            \n\
-    'use strict';                                                        \n\
-    var Wrapped = window.WebSocket;                                      \n\
-    var toWrapped = new WeakMap();                                       \n\
-    var onResponseReceived = function(wrapper, ok) {                     \n\
-        this.onload = this.onerror = null;                               \n\
-        var bag = toWrapped.get(wrapper);                                \n\
-        if ( !ok ) {                                                     \n\
-            if ( bag.properties.onerror ) {                              \n\
-                bag.properties.onerror(new window.ErrorEvent('error'));  \n\
-            }                                                            \n\
-            return;                                                      \n\
-        }                                                                \n\
-        var wrapped = null;                                              \n\
-        try {                                                            \n\
-            wrapped = new Wrapped(bag.args.url, bag.args.protocols);     \n\
-        } catch (ex) {                                                   \n\
-            console.error(ex.toString());                                \n\
-        }                                                                \n\
-        if ( wrapped === null ) {                                        \n\
-            return;                                                      \n\
-        }                                                                \n\
-        for ( var p in bag.properties ) {                                \n\
-            wrapped[p] = bag.properties[p];                              \n\
-        }                                                                \n\
-        for ( var i = 0, l; i < bag.listeners.length; i++ ) {            \n\
-            l = bag.listeners[i];                                        \n\
-            wrapped.addEventListener(l.ev, l.cb, l.fl);                  \n\
-        }                                                                \n\
-        Object.getPrototypeOf(wrapped).constructor = window.WebSocket;   \n\
-        toWrapped.set(wrapper, wrapped);                                 \n\
-    };                                                                   \n\
-    var noopfn = function() {};                                          \n\
-    var fallthruGet = function(wrapper, prop, value) {                   \n\
-        var wrapped = toWrapped.get(wrapper);                            \n\
-        if ( !wrapped ) {                                                \n\
-            return value;                                                \n\
-        }                                                                \n\
-        if ( wrapped instanceof Wrapped ) {                              \n\
-            return wrapped[prop];                                        \n\
-        }                                                                \n\
-        return wrapped.properties.hasOwnProperty(prop) ?                 \n\
-            wrapped.properties[prop] :                                   \n\
-            value;                                                       \n\
-    };                                                                   \n\
-    var fallthruSet = function(wrapper, prop, value) {                   \n\
-        if ( value instanceof Function ) {                               \n\
-            value = value.bind(wrapper);                                 \n\
-        }                                                                \n\
-        var wrapped = toWrapped.get(wrapper);                            \n\
-        if ( !wrapped ) {                                                \n\
-            return;                                                      \n\
-        }                                                                \n\
-        if ( wrapped instanceof Wrapped ) {                              \n\
-            wrapped[prop] = value;                                       \n\
-        } else {                                                         \n\
-            wrapped.properties[prop] = value;                            \n\
-        }                                                                \n\
-    };                                                                   \n\
-    var WebSocket = function(url, protocols) {                           \n\
-        'native';                                                        \n\
-        if (                                                             \n\
-            window.location.protocol === 'https:' &&                     \n\
-            url.lastIndexOf('ws:', 0) === 0                              \n\
-        ) {                                                              \n\
-            var ws = new Wrapped(url, protocols);                        \n\
-            if ( ws ) {                                                  \n\
-                ws.close();                                              \n\
-            }                                                            \n\
-        }                                                                \n\
-        Object.defineProperties(this, {                                  \n\
-            'binaryType': {                                              \n\
-                get: function() {                                        \n\
-                    return fallthruGet(this, 'binaryType', 'blob');      \n\
-                },                                                       \n\
-                set: function(value) {                                   \n\
-                    fallthruSet(this, 'binaryType', value);              \n\
-                }                                                        \n\
-            },                                                           \n\
-            'bufferedAmount': {                                          \n\
-                get: function() {                                        \n\
-                    return fallthruGet(this, 'bufferedAmount', 0);       \n\
-                },                                                       \n\
-                set: noopfn                                              \n\
-            },                                                           \n\
-            'extensions': {                                              \n\
-                get: function() {                                        \n\
-                    return fallthruGet(this, 'extensions', '');          \n\
-                },                                                       \n\
-                set: noopfn                                              \n\
-            },                                                           \n\
-            'onclose': {                                                 \n\
-                get: function() {                                        \n\
-                    return fallthruGet(this, 'onclose', null);           \n\
-                },                                                       \n\
-                set: function(value) {                                   \n\
-                    fallthruSet(this, 'onclose', value);                 \n\
-                }                                                        \n\
-            },                                                           \n\
-            'onerror': {                                                 \n\
-                get: function() {                                        \n\
-                    return fallthruGet(this, 'onerror', null);           \n\
-                },                                                       \n\
-                set: function(value) {                                   \n\
-                    fallthruSet(this, 'onerror', value);                 \n\
-                }                                                        \n\
-            },                                                           \n\
-            'onmessage': {                                               \n\
-                get: function() {                                        \n\
-                    return fallthruGet(this, 'onmessage', null);         \n\
-                },                                                       \n\
-                set: function(value) {                                   \n\
-                    fallthruSet(this, 'onmessage', value);               \n\
-                }                                                        \n\
-            },                                                           \n\
-            'onopen': {                                                  \n\
-                get: function() {                                        \n\
-                    return fallthruGet(this, 'onopen', null);            \n\
-                },                                                       \n\
-                set: function(value) {                                   \n\
-                    fallthruSet(this, 'onopen', value);                  \n\
-                }                                                        \n\
-            },                                                           \n\
-            'protocol': {                                                \n\
-                get: function() {                                        \n\
-                    return fallthruGet(this, 'protocol', '');            \n\
-                },                                                       \n\
-                set: noopfn                                              \n\
-            },                                                           \n\
-            'readyState': {                                              \n\
-                get: function() {                                        \n\
-                    return fallthruGet(this, 'readyState', 0);           \n\
-                },                                                       \n\
-                set: noopfn                                              \n\
-            },                                                           \n\
-            'url': {                                                     \n\
-                get: function() {                                        \n\
-                    return fallthruGet(this, 'url', '');                 \n\
-                },                                                       \n\
-                set: noopfn                                              \n\
-            }                                                            \n\
-        });                                                              \n\
-        toWrapped.set(this, {                                            \n\
-            args: { url: url, protocols: protocols },                    \n\
-            listeners: [],                                               \n\
-            properties: {}                                               \n\
-        });                                                              \n\
-        var img = new Image();                                           \n\
-        img.src =                                                        \n\
-              window.location.origin                                     \n\
-            + '?url=' + encodeURIComponent(url)                          \n\
-            + '&ubofix=f41665f3028c7fd10eecf573336216d3';                \n\
-        img.onload = onResponseReceived.bind(img, this, true);           \n\
-        img.onerror = onResponseReceived.bind(img, this, false);         \n\
-    };                                                                   \n\
-    WebSocket.prototype = Object.create(window.EventTarget.prototype, {  \n\
-        CONNECTING: { value: 0 },                                        \n\
-        OPEN: { value: 1 },                                              \n\
-        CLOSING: { value: 2 },                                           \n\
-        CLOSED: { value: 3 },                                            \n\
-        addEventListener: {                                              \n\
-            enumerable: true,                                            \n\
-            value: function(ev, cb, fl) {                                \n\
-                if ( cb instanceof Function === false ) {                \n\
-                    return;                                              \n\
-                }                                                        \n\
-                var wrapped = toWrapped.get(this);                       \n\
-                if ( !wrapped ) {                                        \n\
-                    return;                                              \n\
-                }                                                        \n\
-                var cbb = cb.bind(this);                                 \n\
-                if ( wrapped instanceof Wrapped ) {                      \n\
-                    wrapped.addEventListener(ev, cbb, fl);               \n\
-                } else {                                                 \n\
-                    wrapped.listeners.push({ ev: ev, cb: cbb, fl: fl }); \n\
-                }                                                        \n\
-            },                                                           \n\
-            writable: true                                               \n\
-        },                                                               \n\
-        close: {                                                         \n\
-            enumerable: true,                                            \n\
-            value: function(code, reason) {                              \n\
-               'native';                                                 \n\
-                var wrapped = toWrapped.get(this);                       \n\
-                if ( wrapped instanceof Wrapped ) {                      \n\
-                    wrapped.close(code, reason);                         \n\
-                }                                                        \n\
-            },                                                           \n\
-            writable: true                                               \n\
-        },                                                               \n\
-        removeEventListener: {                                           \n\
-            enumerable: true,                                            \n\
-            value: function(ev, cb, fl) {                                \n\
-            },                                                           \n\
-            writable: true                                               \n\
-        },                                                               \n\
-        send: {                                                          \n\
-            enumerable: true,                                            \n\
-            value: function(data) {                                      \n\
-                'native';                                                \n\
-                var wrapped = toWrapped.get(this);                       \n\
-                if ( wrapped instanceof Wrapped ) {                      \n\
-                    wrapped.send(data);                                  \n\
-                }                                                        \n\
-            },                                                           \n\
-            writable: true                                               \n\
-        }                                                                \n\
-    });                                                                  \n\
-    WebSocket.CONNECTING = 0;                                            \n\
-    WebSocket.OPEN = 1;                                                  \n\
-    WebSocket.CLOSING = 2;                                               \n\
-    WebSocket.CLOSED = 3;                                                \n\
-    window.WebSocket = WebSocket;                                        \n\
-    var me = document.currentScript;                                     \n\
-    if ( me && me.parentNode !== null ) {                                \n\
-        me.parentNode.removeChild(me);                                   \n\
-    }                                                                    \n\
-})();";
+**/
 
-try {
-    parent.appendChild(script);
-} catch (ex) {
-}
+(function() {
+    'use strict';
 
-return true;
+    if ( isNotHTML ) { return; }
 
-/******************************************************************************/
+    var scriptlet = function() {
+        var magic = String.fromCharCode(Date.now() % 26 + 97) +
+                    Math.floor(Math.random() * 982451653 + 982451653).toString(36);
+        Object.defineProperty(window, 'I10C', {
+            set: function() {
+                throw new Error(magic);
+            }
+        });
+        var oe = window.error;
+        window.onerror = function(msg, src, line, col, error) {
+            if ( msg.indexOf(magic) !== -1 ) {
+                return true;
+            }
+            if ( oe instanceof Function ) {
+                return oe(msg, src, line, col, error);
+            }
+        }.bind();
+    };
 
+    scriptlets.push(scriptlet);
+})();
+
+/*******************************************************************************
+
+    Collate and add scriptlets to document.
+
+**/
+
+(function() {
+    'use strict';
+
+    if ( scriptlets.length === 0 ) { return; }
+
+    // Have the script tag remove itself once executed (leave a clean
+    // DOM behind).
+    scriptlets.push(function() {
+        var c = document.currentScript, p = c && c.parentNode;
+        if ( p ) {
+            p.removeChild(c);
+        }
+    });
+
+    var scriptText = [];
+    for ( var i = 0; i < scriptlets.length; i++ ) {
+        scriptText.push('(' + scriptlets[i].toString() + ')();');
+    }
+
+    var elem = document.createElement('script');
+    elem.appendChild(document.createTextNode(scriptText.join('\n')));
+    try {
+        (document.head || document.documentElement).appendChild(elem);
+    } catch(ex) {
+    }
 })();

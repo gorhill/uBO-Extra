@@ -15,8 +15,8 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r"
-   sodipodi:docname="ubo-ws.svg"
-   inkscape:export-filename="/home/rhill/permahome/workshop/ublock/src/img/icon_16.png"
+   sodipodi:docname="ubo-extra.svg"
+   inkscape:export-filename="/home/rhill/permahome/workshop/uBO-WebSocket/icon16.png"
    inkscape:export-xdpi="11.25"
    inkscape:export-ydpi="11.25">
   <defs
@@ -78,9 +78,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:zoom="5.6568542"
-     inkscape:cx="64.392082"
-     inkscape:cy="64"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="45.481218"
+     inkscape:cy="19.113032"
      inkscape:document-units="px"
      inkscape:current-layer="layer5"
      showgrid="true"
@@ -100,7 +100,8 @@
      inkscape:showpageshadow="false"
      borderlayer="false"
      inkscape:snap-global="true"
-     inkscape:snap-grids="true">
+     inkscape:snap-grids="true"
+     inkscape:bbox-nodes="true">
     <inkscape:grid
        type="xygrid"
        id="grid3059"
@@ -118,7 +119,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
         <dc:description>Use gray 50% for the &quot;off&quot; color</dc:description>
         <cc:license
            rdf:resource="http://creativecommons.org/licenses/by-nc/3.0/" />
@@ -170,31 +171,16 @@
      inkscape:label="text"
      style="display:inline"
      transform="translate(-17.872548,-17.32535)">
-    <ellipse
-       style="font-size:100.21945953px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:none;stroke:#ffffff;stroke-width:5.99999952;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;display:inline;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
-       inkscape:export-filename="/home/rhill/permahome/workshop/ublock/platform/chromium/img/browsericons/path2996.png"
-       inkscape:export-xdpi="26.719999"
-       inkscape:export-ydpi="26.719999"
-       cx="102.12254"
-       cy="81.325356"
-       rx="11.999999"
-       ry="12"
-       sodipodi:cx="102.12254"
-       sodipodi:cy="81.325356"
-       sodipodi:rx="11.999999"
-       sodipodi:ry="12"
-       transform="matrix(1.3333335,0,0,1.3333334,-42.290862,-31.108461)"
-       id="path2996-3" />
-    <g
-       transform="scale(1.0018026,0.99820067)"
-       style="font-size:73.20139312999999959px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:#ffffff;stroke-width:1.99999996999999996;stroke-miterlimit:4;stroke-opacity:1;font-family:Sans;stroke-dasharray:none"
-       id="text3778">
-      <path
-         style="font-variant:normal;font-stretch:normal;fill:#ffffff;stroke:#ffffff;stroke-width:0;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;font-family:Ubuntu;-inkscape-font-specification:Ubuntu"
-         d="m 81.72523,81.471945 c 0,11.019828 -4.991003,16.028841 -15.97121,16.028841 -10.980207,0 -15.97121,-5.009013 -15.97121,-16.028841 l 0,-24.043262 7.985605,0 0,24.043262 c 0,7.012618 0.9982,8.014421 7.985605,8.014421 6.987404,0 7.985605,-1.001803 7.985605,-8.014421 l 0,-24.043262 7.985605,0 z"
-         id="path3783"
-         inkscape:connector-curvature="0"
-         sodipodi:nodetypes="ccccccccccc" />
-    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:120.47058105px;line-height:125%;font-family:'Droid Sans';-inkscape-font-specification:'Droid Sans Bold';letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="48.696079"
+       y="123.9134"
+       id="text4229"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan4231"
+         x="48.696079"
+         y="123.9134">+</tspan></text>
   </g>
 </svg>
