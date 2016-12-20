@@ -34,4 +34,4 @@ Related issues:
 
 The extension has no interactive UI, just an icon in the toolbar to remind it's enabled.
 
-Your browser should allow you to hide the icon if it annoys you. Use uBlock Origin's logger if you want to see and possibly filter WebSocket connections.
+Your browser should allow you to hide the icon if it annoys you. Use uBlock Origin's logger if you want to see and possibly filter WebSocket connections made visible by uBO-Extra.
