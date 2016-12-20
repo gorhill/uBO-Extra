@@ -21,9 +21,9 @@ Related issues:
 
 ***
 
-Instart Logic's technology used to disguise third-party network requests as first-party network requests, **including** the writing/reading of third-party cookies. I consider this to be extremely hostile to users, even those **not** using content blockers, as it allows 3rd-party servers to set cookies even if a user chose to block 3rd-party cookies.
+Instart Logic's technology used to disguise third-party network requests as first-party network requests, **including** the writing/reading of third-party cookies. I consider this to be extremely hostile to users, even those **not** using a content blocker, as it allows third-party servers to read/write cookies even if a user chose to block 3rd-party cookies.
 
-The company behind the technology understand how hostile its technology is to users, and thus tries to hide what is being done by making it very difficult to investigate by detecting whether the browser's developer console is opened, and when it detects it is opened, it ceases completely to make use of the obfuscation mechanism. The developer console-detecting code works only for Chromium-based browsers however, and therefore the obfuscation technology is not used for when using Firefox (a different web page is served for Firefox).
+The company behind the technology understand how hostile its technology is to users, and thus tries to hide what is being done by making it difficult to investigate by detecting whether the browser's developer console is opened, and when it detects it is opened, it ceases completely to make use of the obfuscation mechanism. The developer console-detecting code works only for Chromium-based browsers however, and therefore the obfuscation technology is not used for when using Firefox (a different web page is served for Firefox).
 
 Related issues:
 
