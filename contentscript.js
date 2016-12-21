@@ -324,12 +324,14 @@ var isNotHTML = (function() {
         window.WebSocket = WebSocket;
     };
 
-    scriptlets.push(scriptlet);
+    scriptlets.push({
+        scriptlet: scriptlet
+    });
 })();
 
 /*******************************************************************************
 
-    Instart Logic buster
+    Instart Logic buster v1
 
     https://github.com/uBlockOrigin/uAssets/issues/227
 
@@ -359,7 +361,126 @@ var isNotHTML = (function() {
         }.bind();
     };
 
-    scriptlets.push(scriptlet);
+    scriptlets.push({
+        scriptlet: scriptlet,
+        targets: [
+            'boston.com',
+            'chicagotribune.com',
+            'mcall.com',
+            'orlandosentinel.com',
+            'sandiegouniontribune.com',
+            'sporcle.com',
+            'sun-sentinel.com',
+            'wowhead.com',
+        ]
+    });
+})();
+
+/*******************************************************************************
+
+    Instart Logic buster: v2
+
+    https://github.com/uBlockOrigin/uAssets/issues/227#issuecomment-268409666
+
+**/
+
+(function() {
+    'use strict';
+
+    if ( isNotHTML ) { return; }
+
+    var scriptlet = function() {
+        var magic = String.fromCharCode(Date.now() % 26 + 97) +
+                    Math.floor(Math.random() * 982451653 + 982451653).toString(36);
+        window.I10C = new Proxy({}, {
+            get: function(target, name) {
+                switch ( name ) {
+                case 'CanRun':
+                    return function() {
+                        return false;
+                    };
+                case 'HtmlStreaming':
+                    return {
+                        InsertTags: function(a, b) {
+                            document.write(b);
+                        },
+                        InterceptNode: function() {
+                        },
+                        PatchBegin: function() {
+                        },
+                        PatchEnd: function() {
+                        },
+                        PatchInit: function() {
+                        },
+                        ReloadWithNoHtmlStreaming: function() {
+                        },
+                        RemoveTags: function() {
+                        },
+                        UpdateAttributes: function() {
+                        }
+                    };
+                default:
+                    if ( target[name] === undefined ) {
+                        throw new Error(magic);
+                    }
+                    return target[name];
+                }
+            },
+            set: function(target, name, value) {
+                switch ( name ) {
+                case 'CanRun':
+                    break;
+                default:
+                    target[name] = value;
+                }
+            }
+        });
+        window.INSTART = new Proxy({}, {
+            get: function(target, name) {
+                switch ( name ) {
+                case 'Init':
+                    return function() {
+                    };
+                default:
+                    if ( target[name] === undefined ) {
+                        throw new Error(magic);
+                    }
+                    return target[name];
+                }
+            },
+            set: function(target, name, value) {
+                switch ( name ) {
+                case 'Init':
+                    break;
+                default:
+                    target[name] = value;
+                }
+            }
+        });
+        var oe = window.error;
+        window.onerror = function(msg, src, line, col, error) {
+            if ( msg.indexOf(magic) !== -1 ) {
+                return true;
+            }
+            if ( oe instanceof Function ) {
+                return oe(msg, src, line, col, error);
+            }
+        }.bind();
+    };
+
+    scriptlets.push({
+        scriptlet: scriptlet,
+        targets: [
+            'calgaryherald.com',
+            'edmontonjournal.com',
+            'leaderpost.com',
+            'montrealgazette.com',
+            'ottawacitizen.com',
+            'theprovince.com',
+            'thestarphoenix.com',
+            'windsorstar.com',
+        ]
+    });
 })();
 
 /*******************************************************************************
@@ -373,19 +494,36 @@ var isNotHTML = (function() {
 
     if ( scriptlets.length === 0 ) { return; }
 
+    var restrFromString = function(s) {
+        return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    };
+
+    var reFromArray = function(aa) {
+        return new RegExp('(^|\.)(' + aa.map(restrFromString).join('|') + ')$');
+    };
+
+    var scriptText = [], entry, re;
+    while ( (entry = scriptlets.shift()) ) {
+        if ( Array.isArray(entry.targets) ) {
+            re = reFromArray(entry.targets);
+            if ( re.test( window.location.hostname) === false ) {
+                continue;
+            }
+        }
+        scriptText.push('(' + entry.scriptlet.toString() + ')();');
+    }
+
+    if ( scriptText.length === 0 ) { return; }
+
     // Have the script tag remove itself once executed (leave a clean
     // DOM behind).
-    scriptlets.push(function() {
+    var cleanup = function() {
         var c = document.currentScript, p = c && c.parentNode;
         if ( p ) {
             p.removeChild(c);
         }
-    });
-
-    var scriptText = [];
-    for ( var i = 0; i < scriptlets.length; i++ ) {
-        scriptText.push('(' + scriptlets[i].toString() + ')();');
-    }
+    };
+    scriptText.push('(' + cleanup.toString() + ')();');
 
     var elem = document.createElement('script');
     elem.appendChild(document.createTextNode(scriptText.join('\n')));
