@@ -371,6 +371,7 @@ var isNotHTML = (function() {
             'sandiegouniontribune.com',
             'sporcle.com',
             'sun-sentinel.com',
+            'timeanddate.com',
             'wowhead.com',
         ]
     });
