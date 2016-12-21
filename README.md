@@ -28,7 +28,7 @@ The company behind the technology understand how hostile its technology is to us
 Related issues:
 
 - <https://github.com/uBlockOrigin/uAssets/issues/227>
-- <https://np.reddit.com/r/wow/comments/5exq2d/wowheadcom_sucking_bandwidth/>
+- <https://www.reddit.com/r/wow/comments/5exq2d/wowheadcom_sucking_bandwidth/>
 
 ***
 
