@@ -334,7 +334,6 @@ var isNotHTML = (function() {
             'calgaryherald.com',
             'edmontonjournal.com',
             'edmunds.com',
-            'edmunds.com',
             'financialpost.com',
             'leaderpost.com',
             'montrealgazette.com',
