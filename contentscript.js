@@ -104,224 +104,60 @@ var isNotHTML = (function() {
     // WebSocket reference: https://html.spec.whatwg.org/multipage/comms.html
     // The script tag will remove itself from the DOM once it completes
     // execution.
-    // Ideally, the `js/websocket.js` script would be declared as a
-    // `web_accessible_resources` in the manifest, but this unfortunately would
-    // open the door for web pages to identify *directly* that one is using
-    // uBlock Origin. Consequently, I have to inject the code as a literal
-    // string below :(
-    // For code review, the stringified code below is found in
-    // `js/websocket.js` (comments and empty lines were stripped).
+    //
+    // This new implementation was borrowed from https://github.com/kzar (ABP
+    // developer), which is cleaner and does not have issues of the previous
+    // implementation, see <https://github.com/gorhill/uBO-Extra/issues/12>.
+    //
+    // The scriptlet code below is based on this commit in ABP's repo:
+    // https://github.com/adblockplus/adblockpluschrome/commit/457a336ee55a433217c3ffe5d363e5c6980f26f4#diff-c65c7b9a7a7b1819bef1a2957f08e8ceR441
+    //
+    // In order to respect authorship in the commit history, I manually
+    // imported/adapted the changes above, then I committed these changes with
+    // proper authorship proper information taken from the commit above (I did
+    // not ask explicit permission, the license of both projects are GPLv3.)
     var scriptlet = function() {
-        var Wrapped = window.WebSocket;
-        var toWrapped = new WeakMap();
+        var RealWebSocket = window.WebSocket,
+            closeWebSocket = Function.prototype.call.bind(RealWebSocket.prototype.close);
+
         var onResponseReceived = function(wrapper, ok) {
             this.onload = this.onerror = null;
-            var bag = toWrapped.get(wrapper);
             if ( !ok ) {
-                if ( bag.properties.onerror ) {
-                    bag.properties.onerror(new window.ErrorEvent('error'));
-                }
-                return;
-            }
-            var wrapped = null;
-            try {
-                wrapped = new Wrapped(bag.args.url, bag.args.protocols);
-            } catch (ex) {
-                console.error(ex.toString());
-            }
-            if ( wrapped === null ) {
-                return;
-            }
-            for ( var p in bag.properties ) {
-                wrapped[p] = bag.properties[p];
-            }
-            for ( var i = 0, l; i < bag.listeners.length; i++ ) {
-                l = bag.listeners[i];
-                wrapped.addEventListener(l.ev, l.cb, l.fl);
-            }
-            Object.getPrototypeOf(wrapped).constructor = window.WebSocket;
-            toWrapped.set(wrapper, wrapped);
-        };
-        var noopfn = function() {};
-        var fallthruGet = function(wrapper, prop, value) {
-            var wrapped = toWrapped.get(wrapper);
-            if ( !wrapped ) {
-                return value;
-            }
-            if ( wrapped instanceof Wrapped ) {
-                return wrapped[prop];
-            }
-            return wrapped.properties.hasOwnProperty(prop) ?
-                wrapped.properties[prop] :
-                value;
-        };
-        var fallthruSet = function(wrapper, prop, value) {
-            if ( value instanceof Function ) {
-                value = value.bind(wrapper);
-            }
-            var wrapped = toWrapped.get(wrapper);
-            if ( !wrapped ) {
-                return;
-            }
-            if ( wrapped instanceof Wrapped ) {
-                wrapped[prop] = value;
-            } else {
-                wrapped.properties[prop] = value;
+                closeWebSocket(wrapper);
             }
         };
-        var WebSocket = function(url, protocols) {
-            'native';
-            if (
-                window.location.protocol === 'https:' &&
-                url.lastIndexOf('ws:', 0) === 0
-            ) {
-                var ws = new Wrapped(url, protocols);
-                if ( ws ) {
-                    ws.close();
-                }
+
+        var WrappedWebSocket = function(url) {
+            // Throw correct exceptions if the constructor is used improperly.
+            if ( this instanceof WrappedWebSocket === false ) {
+                return RealWebSocket();
             }
-            Object.defineProperties(this, {
-                'binaryType': {
-                    get: function() {
-                        return fallthruGet(this, 'binaryType', 'blob');
-                    },
-                    set: function(value) {
-                        fallthruSet(this, 'binaryType', value);
-                    }
-                },
-                'bufferedAmount': {
-                    get: function() {
-                        return fallthruGet(this, 'bufferedAmount', 0);
-                    },
-                    set: noopfn
-                },
-                'extensions': {
-                    get: function() {
-                        return fallthruGet(this, 'extensions', '');
-                    },
-                    set: noopfn
-                },
-                'onclose': {
-                    get: function() {
-                        return fallthruGet(this, 'onclose', null);
-                    },
-                    set: function(value) {
-                        fallthruSet(this, 'onclose', value);
-                    }
-                },
-                'onerror': {
-                    get: function() {
-                        return fallthruGet(this, 'onerror', null);
-                    },
-                    set: function(value) {
-                        fallthruSet(this, 'onerror', value);
-                    }
-                },
-                'onmessage': {
-                    get: function() {
-                        return fallthruGet(this, 'onmessage', null);
-                    },
-                    set: function(value) {
-                        fallthruSet(this, 'onmessage', value);
-                    }
-                },
-                'onopen': {
-                    get: function() {
-                        return fallthruGet(this, 'onopen', null);
-                    },
-                    set: function(value) {
-                        fallthruSet(this, 'onopen', value);
-                    }
-                },
-                'protocol': {
-                    get: function() {
-                        return fallthruGet(this, 'protocol', '');
-                    },
-                    set: noopfn
-                },
-                'readyState': {
-                    get: function() {
-                        return fallthruGet(this, 'readyState', 0);
-                    },
-                    set: noopfn
-                },
-                'url': {
-                    get: function() {
-                        return fallthruGet(this, 'url', '');
-                    },
-                    set: noopfn
-                }
-            });
-            toWrapped.set(this, {
-                args: { url: url, protocols: protocols },
-                listeners: [],
-                properties: {}
-            });
+            if ( arguments.length < 1 ) {
+                return new RealWebSocket();
+            }
+            var websocket = arguments.length === 1 ?
+                new RealWebSocket(url) :
+                new RealWebSocket(url, arguments[1]);
+
             var img = new Image();
             img.src = window.location.origin + 
                 '?url=' + encodeURIComponent(url) +
                 '&ubofix=f41665f3028c7fd10eecf573336216d3';
-            img.onload = onResponseReceived.bind(img, this, true);
-            img.onerror = onResponseReceived.bind(img, this, false);
+            img.onload = onResponseReceived.bind(img, websocket, true);
+            img.onerror = onResponseReceived.bind(img, websocket, false);
+            return websocket;
         };
-        WebSocket.prototype = Object.create(window.EventTarget.prototype, {
-            CONNECTING: { value: 0 },
-            OPEN: { value: 1 },
-            CLOSING: { value: 2 },
-            CLOSED: { value: 3 },
-            addEventListener: {
-                enumerable: true,
-                value: function(ev, cb, fl) {
-                    if ( cb instanceof Function === false ) {
-                        return;
-                    }
-                    var wrapped = toWrapped.get(this);
-                    if ( !wrapped ) {
-                        return;
-                    }
-                    var cbb = cb.bind(this);
-                    if ( wrapped instanceof Wrapped ) {
-                        wrapped.addEventListener(ev, cbb, fl);
-                    } else {
-                        wrapped.listeners.push({ ev: ev, cb: cbb, fl: fl });
-                    }
-                },
-                writable: true
-            },
-            close: {
-                enumerable: true,
-                value: function(code, reason) {
-                   'native';
-                    var wrapped = toWrapped.get(this);
-                    if ( wrapped instanceof Wrapped ) {
-                        wrapped.close(code, reason);
-                    }
-                },
-                writable: true
-            },
-            removeEventListener: {
-                enumerable: true,
-                value: function(ev, cb, fl) {
-                },
-                writable: true
-            },
-            send: {
-                enumerable: true,
-                value: function(data) {
-                    'native';
-                    var wrapped = toWrapped.get(this);
-                    if ( wrapped instanceof Wrapped ) {
-                        wrapped.send(data);
-                    }
-                },
-                writable: true
-            }
+
+        WrappedWebSocket.prototype = RealWebSocket.prototype;
+        window.WebSocket = WrappedWebSocket.bind(window);
+
+        Object.defineProperties(window.WebSocket, {
+            CONNECTING: { value: RealWebSocket.CONNECTING, enumerable: true },
+            OPEN: { value: RealWebSocket.OPEN, enumerable: true },
+            CLOSING: { value: RealWebSocket.CLOSING, enumerable: true },
+            CLOSED: { value: RealWebSocket.CLOSED, enumerable: true },
+            prototype: { value: RealWebSocket.prototype }
         });
-        WebSocket.CONNECTING = 0;
-        WebSocket.OPEN = 1;
-        WebSocket.CLOSING = 2;
-        WebSocket.CLOSED = 3;
-        window.WebSocket = WebSocket;
     };
 
     scriptlets.push({
