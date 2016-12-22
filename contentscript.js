@@ -310,6 +310,7 @@ var isNotHTML = (function() {
         targets: [
             'calgaryherald.com',
             'edmontonjournal.com',
+            'edmunds.com',
             'leaderpost.com',
             'montrealgazette.com',
             'ottawacitizen.com',
