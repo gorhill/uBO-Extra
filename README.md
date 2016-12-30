@@ -32,6 +32,13 @@ Related issues:
 
 ***
 
+Many web sites are starting to abuse WebRTC API to work around content blocker. uBO-Extra v2.3+ can prevent these web sites from abusing WebRTC to work around uBO.
+
+Related issues:
+- <https://forums.lanik.us/viewtopic.php?p=110902#p110902>
+
+***
+
 The extension has no interactive UI, just an icon in the toolbar to remind it's enabled.
 
 Your browser should allow you to hide the icon if it annoys you. Use uBlock Origin's logger if you want to see and possibly filter WebSocket connections made visible by uBO-Extra.
