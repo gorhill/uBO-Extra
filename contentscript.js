@@ -262,7 +262,7 @@ var isNotHTML = (function() {
                 case 'HtmlStreaming':
                     return {
                         InsertTags: function(a, b) {
-                            document.write(b);
+                            document.write(b); // jshint ignore:line
                         },
                         InterceptNode: function() {
                         },
@@ -348,9 +348,9 @@ var isNotHTML = (function() {
 
 /*******************************************************************************
 
-    WebRTC abuse.
+    WebRTC abuse: generic.
 
-    https://forums.lanik.us/viewtopic.php?p=110902#p110902
+    https://github.com/uBlockOrigin/uAssets/issues/251
 
 **/
 
@@ -359,21 +359,57 @@ var isNotHTML = (function() {
 
     if ( isNotHTML ) { return; }
 
+    // Nothing to fix for browsers not supporting RTCPeerConnection.
+    if ( window.RTCPeerConnection instanceof Function === false ) {
+        return false;
+    }
+
     var scriptlet = function() {
-        window.RTCCertificate =
-        window.RTCDataChannel =
-        window.RTCDataChannelEvent =
-        window.RTCIceCandidate =
-        window.RTCPeerConnection =
-        window.RTCPeerConnectionIceEvent =
-        window.RTCSessionDescription = undefined;
+        var RealRTCPeerConnection = window.RTCPeerConnection;
+        var WrappedRTCPeerConnection = function(config) {
+            if ( this instanceof WrappedRTCPeerConnection === false ) {
+                return RealRTCPeerConnection();
+            }
+            var win = window, location = win.location, max = 10;
+            try {
+                for (;;) {
+                    location = win.location;
+                    if ( win.parent === win ) { break; }
+                    win = win.parent;
+                    if ( !win ) { break; }
+                    if ( (max -= 1) === 0 ) { break; }
+                }
+            } catch(ex) {
+            }
+            var scheme = location.protocol === 'https:' ? 'wss' : 'ws',
+                wsURL = scheme + '://' + location.hostname + '/';
+            var rtcURL = config &&
+                         config.iceServers &&
+                         config.iceServers[0] &&
+                         config.iceServers[0].urls &&
+                         config.iceServers[0].urls;
+            if ( Array.isArray(rtcURL) && rtcURL.length !== 0 ) {
+                rtcURL = rtcURL[0];
+            }
+            if ( !rtcURL ) { rtcURL = ''; }
+            try {
+                (new window.WebSocket(wsURL)).close();
+            } catch(ex) {
+                var msg = ex.message.replace(wsURL, rtcURL)
+                                    .replace('WebSocket', 'RTCPeerConnection');
+                throw new Error(msg, '', 0);
+            }
+            if ( arguments.length === 0 ) {
+                return new RealRTCPeerConnection();
+            }
+            return new RealRTCPeerConnection(config);
+        };
+        WrappedRTCPeerConnection.prototype = RealRTCPeerConnection.prototype;
+        window.RTCPeerConnection = WrappedRTCPeerConnection.bind(window);
     };
 
     scriptlets.push({
         scriptlet: scriptlet,
-        targets: [
-            'technobuffalo.com',
-        ]
     });
 })();
 
