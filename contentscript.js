@@ -348,6 +348,37 @@ var isNotHTML = (function() {
 
 /*******************************************************************************
 
+    WebRTC abuse.
+
+    https://forums.lanik.us/viewtopic.php?p=110902#p110902
+
+**/
+
+(function() {
+    'use strict';
+
+    if ( isNotHTML ) { return; }
+
+    var scriptlet = function() {
+        window.RTCCertificate =
+        window.RTCDataChannel =
+        window.RTCDataChannelEvent =
+        window.RTCIceCandidate =
+        window.RTCPeerConnection =
+        window.RTCPeerConnectionIceEvent =
+        window.RTCSessionDescription = undefined;
+    };
+
+    scriptlets.push({
+        scriptlet: scriptlet,
+        targets: [
+            'technobuffalo.com',
+        ]
+    });
+})();
+
+/*******************************************************************************
+
     Collate and add scriptlets to document.
 
 **/
@@ -365,13 +396,27 @@ var isNotHTML = (function() {
         return new RegExp('(^|\.)(' + aa.map(restrFromString).join('|') + ')$');
     };
 
-    var scriptText = [], entry, re;
+    var getHostname = function() {
+        var win = window, hn, max = 10;
+        try {
+            for (;;) {
+                hn = win.location.hostname;
+                if ( hn !== '' ) { return hn; }
+                if ( win.parent === win ) { break; }
+                win = win.parent;
+                if ( !win ) { break; }
+                if ( (max -= 1) === 0 ) { break; }
+            }
+        } catch(ex) {
+        }
+        return '';
+    };
+
+    var scriptText = [], entry, re, hostname = getHostname();
     while ( (entry = scriptlets.shift()) ) {
         if ( Array.isArray(entry.targets) ) {
             re = reFromArray(entry.targets);
-            if ( re.test( window.location.hostname) === false ) {
-                continue;
-            }
+            if ( re.test(hostname) === false ) { continue; }
         }
         scriptText.push('(' + entry.scriptlet.toString() + ')();');
     }
