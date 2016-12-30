@@ -360,12 +360,16 @@ var isNotHTML = (function() {
     if ( isNotHTML ) { return; }
 
     // Nothing to fix for browsers not supporting RTCPeerConnection.
-    if ( window.RTCPeerConnection instanceof Function === false ) {
-        return false;
+    if (
+        window.RTCPeerConnection instanceof Function === false &&
+        window.webkitRTCPeerConnection instanceof Function === false
+    ) {
+        return;
     }
 
     var scriptlet = function() {
-        var RealRTCPeerConnection = window.RTCPeerConnection;
+        var RealRTCPeerConnection = window.RTCPeerConnection ||
+                                    window.webkitRTCPeerConnection;
         var WrappedRTCPeerConnection = function(config) {
             if ( this instanceof WrappedRTCPeerConnection === false ) {
                 return RealRTCPeerConnection();
@@ -405,7 +409,13 @@ var isNotHTML = (function() {
             return new RealRTCPeerConnection(config);
         };
         WrappedRTCPeerConnection.prototype = RealRTCPeerConnection.prototype;
-        window.RTCPeerConnection = WrappedRTCPeerConnection.bind(window);
+        var bound = WrappedRTCPeerConnection.bind(window);
+        if ( window.RTCPeerConnection instanceof Function ) {
+            window.RTCPeerConnection = bound;
+        }
+        if ( window.webkitRTCPeerConnection instanceof Function ) {
+            window.webkitRTCPeerConnection = bound;
+        }
     };
 
     scriptlets.push({
