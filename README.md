@@ -46,6 +46,8 @@ Related issues:
 - <https://github.com/uBlockOrigin/uAssets/issues/251>
 - <https://forums.lanik.us/viewtopic.php?p=110902#p110902>
 
+You can always visit `chrome://webrtc-internals/` to find out if a site is using WebRTC API.
+
 ***
 
 The extension has no interactive UI, just an icon in the toolbar to remind it's enabled.
