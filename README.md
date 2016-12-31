@@ -5,7 +5,7 @@ A companion extension to [uBlock Origin](https://github.com/gorhill/uBlock): to 
 ### Installation
 
 Manually, using your browser's _"Load unpacked extension..."_ feature:
-- Download latest version (.zip) from [_Releases](https://github.com/gorhill/uBO-Extra/releases).
+- Download latest version (.zip) from [_Releases_](https://github.com/gorhill/uBO-Extra/releases).
 - Go to _Extensions_, check _"Developer mode"_.
 - Click _"Load unpacked extension..."_, select the zip file you downloaded above.
 - Keep in mind you will have to update manually when a new version is released.
