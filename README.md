@@ -35,6 +35,7 @@ Related issues:
 Many web sites are starting to abuse WebRTC API to work around content blocker. uBO-Extra v2.3+ can prevent these web sites from abusing WebRTC to work around uBO.
 
 Related issues:
+- <https://github.com/uBlockOrigin/uAssets/issues/251>
 - <https://forums.lanik.us/viewtopic.php?p=110902#p110902>
 
 ***
