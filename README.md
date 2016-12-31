@@ -4,7 +4,15 @@ A companion extension to [uBlock Origin](https://github.com/gorhill/uBlock): to 
 
 ### Installation
 
-You can install manually using your browser's _"Load unpacked extension..."_ feature, or directly from the Chrome store: <https://chrome.google.com/webstore/detail/ublock-origin-extra/pgdnlhfefecpicbbihgmbmffkjpaplco>.
+Manually, using your browser's _"Load unpacked extension..."_ feature:
+- Download latest version (.zip) from [_Releases](https://github.com/gorhill/uBO-Extra/releases).
+- Go to _Extensions_, check _"Developer mode"_.
+- Click _"Load unpacked extension..."_, select the zip file you downloaded above.
+- Keep in mind you will have to update manually when a new version is released.
+
+From the Chrome store:
+- <https://chrome.google.com/webstore/detail/ublock-origin-extra/pgdnlhfefecpicbbihgmbmffkjpaplco>.
+- New version will be updated automatically.
 
 ### Purpose
 
