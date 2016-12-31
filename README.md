@@ -49,7 +49,7 @@ Related issues:
 You can always visit `chrome://webrtc-internals/` to find out if a site is using WebRTC API (left: without uBO-Extra, right: with uBO-Extra):
 ![jpost.com](https://cloud.githubusercontent.com/assets/585534/21578491/5f238ad6-cf50-11e6-9d27-a46e5e4673db.png)
 
-If you want to block WebRTC connections on a specific site, say `example.com`, use a filter the `*$websocket,domain=example.com` in uBlock Origin.
+If you want to block WebRTC connections on a specific site, say `example.com`, use the filter `*$websocket,domain=example.com` in uBlock Origin.
 
 ***
 
