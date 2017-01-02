@@ -410,6 +410,11 @@ var isNotHTML = (function() {
         };
         WrappedRTCPeerConnection.prototype = RealRTCPeerConnection.prototype;
         var bound = WrappedRTCPeerConnection.bind(window);
+            bound.prototype = {
+            createAnswer: RealRTCPeerConnection.prototype.createAnswer,
+            createOffer: RealRTCPeerConnection.prototype.createOffer,
+            generateCertificate: RealRTCPeerConnection.prototype.generateCertificate,
+        };
         if ( window.RTCPeerConnection instanceof Function ) {
             window.RTCPeerConnection = bound;
         }
@@ -462,12 +467,15 @@ var isNotHTML = (function() {
     };
 
     var scriptText = [], entry, re, hostname = getHostname();
+
+    // Don't inject if document is from local network.
+    if ( /^192\.168\.\d+\.\d+$/.test(hostname) ) { return; }
+
     while ( (entry = scriptlets.shift()) ) {
         if ( Array.isArray(entry.targets) ) {
             re = reFromArray(entry.targets);
             if ( re.test(hostname) === false ) { continue; }
-        }
-        if ( Array.isArray(entry.exceptions) ) {
+        } else if ( Array.isArray(entry.exceptions) ) {
             re = reFromArray(entry.exceptions);
             if ( re.test(hostname) ) { continue; }
         }
