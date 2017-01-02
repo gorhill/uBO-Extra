@@ -420,6 +420,9 @@ var isNotHTML = (function() {
 
     scriptlets.push({
         scriptlet: scriptlet,
+        exceptions: [
+            'hangouts.google.com',
+        ],
     });
 })();
 
@@ -463,6 +466,10 @@ var isNotHTML = (function() {
         if ( Array.isArray(entry.targets) ) {
             re = reFromArray(entry.targets);
             if ( re.test(hostname) === false ) { continue; }
+        }
+        if ( Array.isArray(entry.exceptions) ) {
+            re = reFromArray(entry.exceptions);
+            if ( re.test(hostname) ) { continue; }
         }
         scriptText.push('(' + entry.scriptlet.toString() + ')();');
     }
