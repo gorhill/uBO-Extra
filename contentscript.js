@@ -30,7 +30,8 @@
 
 **/
 
-var scriptlets = [];
+var scriptlets = [],
+    hostname = window.location.hostname;
 
 /*******************************************************************************
 
@@ -38,7 +39,7 @@ var scriptlets = [];
 
 **/
 
-var isNotHTML = (function() {
+var abort = (function() {
     'use strict';
 
     var doc = document;
@@ -58,6 +59,35 @@ var isNotHTML = (function() {
 
 /*******************************************************************************
 
+    Fetch hostname from ancestors if none available (we could be executed from
+    inside an anonymous frame).
+
+**/
+
+if ( !abort ) {
+    if ( hostname === '' ) {
+        hostname = (function() {
+            var win = window, hn = '', max = 10;
+            try {
+                for (;;) {
+                    hn = win.location.hostname;
+                    if ( hn !== '' ) { return hn; }
+                    if ( win.parent === win ) { break; }
+                    win = win.parent;
+                    if ( !win ) { break; }
+                    if ( (max -= 1) === 0 ) { break; }
+                }
+            } catch(ex) {
+            }
+            return hn;
+        })();
+    }
+    // Don't inject if document is from local network.
+    abort = /^192\.168\.\d+\.\d+$/.test(hostname);
+}
+
+/*******************************************************************************
+
     Websocket abuse buster.
 
     https://github.com/gorhill/uBlock/issues/1936
@@ -67,7 +97,7 @@ var isNotHTML = (function() {
 (function() {
     'use strict';
 
-    if ( isNotHTML ) { return; }
+    if ( abort ) { return; }
 
     // https://bugs.chromium.org/p/chromium/issues/detail?id=129353
     // https://github.com/gorhill/uBlock/issues/956
@@ -176,7 +206,7 @@ var isNotHTML = (function() {
 (function() {
     'use strict';
 
-    if ( isNotHTML ) { return; }
+    if ( abort ) { return; }
 
     var scriptlet = function() {
         var magic = String.fromCharCode(Date.now() % 26 + 97) +
@@ -209,6 +239,7 @@ var isNotHTML = (function() {
             'courant.com',
             'dailypress.com',
             'deathandtaxesmag.com',
+            'extremetech.com',
             'gamerevolution.com',
             'gofugyourself.com',
             'hearthhead.com',
@@ -247,7 +278,7 @@ var isNotHTML = (function() {
 (function() {
     'use strict';
 
-    if ( isNotHTML ) { return; }
+    if ( abort ) { return; }
 
     var scriptlet = function() {
         var magic = String.fromCharCode(Date.now() % 26 + 97) +
@@ -357,7 +388,7 @@ var isNotHTML = (function() {
 (function() {
     'use strict';
 
-    if ( isNotHTML ) { return; }
+    if ( abort ) { return; }
 
     // Nothing to fix for browsers not supporting RTCPeerConnection.
     if (
@@ -450,26 +481,7 @@ var isNotHTML = (function() {
         return new RegExp('(^|\.)(' + aa.map(restrFromString).join('|') + ')$');
     };
 
-    var getHostname = function() {
-        var win = window, hn, max = 10;
-        try {
-            for (;;) {
-                hn = win.location.hostname;
-                if ( hn !== '' ) { return hn; }
-                if ( win.parent === win ) { break; }
-                win = win.parent;
-                if ( !win ) { break; }
-                if ( (max -= 1) === 0 ) { break; }
-            }
-        } catch(ex) {
-        }
-        return '';
-    };
-
-    var scriptText = [], entry, re, hostname = getHostname();
-
-    // Don't inject if document is from local network.
-    if ( /^192\.168\.\d+\.\d+$/.test(hostname) ) { return; }
+    var scriptText = [], entry, re;
 
     while ( (entry = scriptlets.shift()) ) {
         if ( Array.isArray(entry.targets) ) {
