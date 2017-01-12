@@ -458,6 +458,7 @@ if ( !abort ) {
         scriptlet: scriptlet,
         exceptions: [
             'hangouts.google.com',
+            'meet.google.com',
         ],
     });
 })();
