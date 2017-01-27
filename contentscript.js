@@ -249,6 +249,7 @@ if ( !abort ) {
             'infinitiev.com',
             'lolking.net',
             'mcall.com',
+            'mmo-champion.com',
             'nasdaq.com',
             'orlandosentinel.com',
             'pcmag.com',
