@@ -3,7 +3,7 @@
     uBO-Extra - A companion extension to uBlock Origin: to gain ability to
                 foil early hostile anti-user mechanisms working around
                 content blockers.
-    Copyright (C) 2016 Raymond Hill
+    Copyright (C) 2016-2017 Raymond Hill
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -31,7 +31,10 @@
 **/
 
 var scriptlets = [],
-    hostname = window.location.hostname;
+    hostname = window.location.hostname,
+    contentScriptSecret =
+        String.fromCharCode(Date.now() % 26 + 97) +
+        Math.floor(Math.random() * 982451653 + 982451653).toString(36);
 
 /*******************************************************************************
 
@@ -113,12 +116,7 @@ if ( !abort ) {
     //return;
 
     // Fix won't be applied on older versions of Chromium.
-    if (
-        window.WebSocket instanceof Function === false ||
-        window.WeakMap instanceof Function === false
-    ) {
-        return false;
-    }
+    if ( window.WebSocket instanceof Function === false ) { return false; }
 
     // Only for dynamically created frames and http/https documents.
     if ( /^(https?:|about:)/.test(window.location.protocol) !== true ) {
@@ -127,9 +125,41 @@ if ( !abort ) {
 
     var doc = document,
         parent = doc.head || doc.documentElement;
-    if ( parent === null ) {
-        return false;
-    }
+    if ( parent === null ) { return false; }
+
+    // Websocket-attempt handler.
+    self.addEventListener(contentScriptSecret, function(ev) {
+        var details = ev.detail || {};
+        if ( details.what !== 'websocket' ) { return; }
+        var onResponseReceived = function(sender, ok) {
+            this.onload = this.onerror = null;
+            dispatchEvent(new CustomEvent(sender, { detail: ok ? '' : 'nope' }));
+        };
+        var elem;
+        var internalURL = window.location.origin + '?';
+        // https://github.com/gorhill/uBO-Extra/issues/7
+        //  Not a real fix, rather a mitigation to the issue until a long-term
+        //  solution is implemented (possibly cross-extensions messaging).
+        //  Try to find an actual image already present in the document.
+        if ( (elem = document.querySelector('link[href*="favicon"]')) ) {
+            internalURL += 'r=' + rencodeURIComponent(elem.href) + '&';
+        } else if ( (elem = document.querySelector('img[src]')) ) {
+            if ( typeof elem.src === 'string' && elem.src !== '' ) {
+                internalURL += 'r=' + encodeURIComponent(elem.src) + '&';
+            }
+        } else if ( (elem = document.querySelector('input[type="image"]')) ) {
+            if ( typeof elem.src === 'string' && elem.src !== '' ) {
+                internalURL += 'r=' + encodeURIComponent(elem.src) + '&';
+            }
+        }
+        internalURL +=
+            'url=' + encodeURIComponent(details.url) +
+            '&ubofix=f41665f3028c7fd10eecf573336216d3';
+        var img = new Image();
+        img.src = internalURL;
+        img.onload = onResponseReceived.bind(img, details.sender, true);
+        img.onerror = onResponseReceived.bind(img, details.sender, false);
+    });
 
     // WebSocket reference: https://html.spec.whatwg.org/multipage/comms.html
     // The script tag will remove itself from the DOM once it completes
@@ -146,18 +176,27 @@ if ( !abort ) {
     // imported/adapted the changes above, then I committed these changes with
     // proper authorship proper information taken from the commit above (I did
     // not ask explicit permission, the license of both projects are GPLv3.)
-    var scriptlet = function() {
+    var scriptlet = function(secret) {
         var RealWebSocket = window.WebSocket,
-            closeWebSocket = Function.prototype.call.bind(RealWebSocket.prototype.close);
+            closeWebSocket = Function.prototype.call.bind(RealWebSocket.prototype.close),
+            addEventListener = self.addEventListener.bind(window),
+            removeEventListener = self.removeEventListener.bind(window),
+            dispatchEvent = self.dispatchEvent.bind(window);
 
-        var onResponseReceived = function(wrapper, ok) {
-            this.onload = this.onerror = null;
-            if ( !ok ) {
-                closeWebSocket(wrapper);
-            }
+        var queryContentScript = function(websocket, url) {
+            var uid = secret + Math.floor(Math.random() * 982451653 + 982451653).toString(36);
+            var handler = function(ev) {
+                removeEventListener(ev.type, handler);
+                if ( ev.detail === 'nope' ) { websocket.close(); }
+            };
+            addEventListener(uid, handler);
+            dispatchEvent(new CustomEvent(secret, {
+                detail: { what: 'websocket', sender: uid, url: url }
+            }));
         };
 
         var WrappedWebSocket = function(url) {
+            var surl = url.toString();
             // Throw correct exceptions if the constructor is used improperly.
             if ( this instanceof WrappedWebSocket === false ) {
                 return RealWebSocket();
@@ -166,15 +205,9 @@ if ( !abort ) {
                 return new RealWebSocket();
             }
             var websocket = arguments.length === 1 ?
-                new RealWebSocket(url) :
-                new RealWebSocket(url, arguments[1]);
-
-            var img = new Image();
-            img.src = window.location.origin + 
-                '?url=' + encodeURIComponent(url) +
-                '&ubofix=f41665f3028c7fd10eecf573336216d3';
-            img.onload = onResponseReceived.bind(img, websocket, true);
-            img.onerror = onResponseReceived.bind(img, websocket, false);
+                new RealWebSocket(surl) :
+                new RealWebSocket(surl, arguments[1]);
+            queryContentScript(websocket, surl);
             return websocket;
         };
 
@@ -211,6 +244,12 @@ if ( !abort ) {
     var scriptlet = function() {
         var magic = String.fromCharCode(Date.now() % 26 + 97) +
                     Math.floor(Math.random() * 982451653 + 982451653).toString(36);
+        var realLog = window.console.log,
+            dummy;
+        console.log = function log(a) {
+            if ( a instanceof HTMLElement ) { dummy = a.id; }
+            realLog.apply(null, arguments);
+        }.bind(window);
         Object.defineProperty(window, 'I10C', {
             set: function() {
                 throw new Error(magic);
@@ -492,7 +531,7 @@ if ( !abort ) {
             re = reFromArray(entry.exceptions);
             if ( re.test(hostname) ) { continue; }
         }
-        scriptText.push('(' + entry.scriptlet.toString() + ')();');
+        scriptText.push('(' + entry.scriptlet.toString() + ')("' + contentScriptSecret + '");');
     }
 
     if ( scriptText.length === 0 ) { return; }
