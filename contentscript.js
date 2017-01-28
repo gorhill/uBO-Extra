@@ -176,6 +176,10 @@ if ( !abort ) {
     // imported/adapted the changes above, then I committed these changes with
     // proper authorship proper information taken from the commit above (I did
     // not ask explicit permission, the license of both projects are GPLv3.)
+    //
+    // The 'dummy'local variable in WrappedWebSocket is needed. See
+    // https://github.com/uBlockOrigin/uAssets/issues/227#issuecomment-275879231
+
     var scriptlet = function(secret) {
         var RealWebSocket = window.WebSocket,
             closeWebSocket = Function.prototype.call.bind(RealWebSocket.prototype.close),
@@ -196,7 +200,8 @@ if ( !abort ) {
         };
 
         var WrappedWebSocket = function(url) {
-            var surl = url.toString();
+            var surl = url.toString(),
+                dummy = url.toString();
             // Throw correct exceptions if the constructor is used improperly.
             if ( this instanceof WrappedWebSocket === false ) {
                 return RealWebSocket();
@@ -249,7 +254,7 @@ if ( !abort ) {
         console.log = function log(a) {
             if ( a instanceof HTMLElement ) { dummy = a.id; }
             realLog.apply(null, arguments);
-        }.bind(window);
+        }.bind(null);
         Object.defineProperty(window, 'I10C', {
             set: function() {
                 throw new Error(magic);
