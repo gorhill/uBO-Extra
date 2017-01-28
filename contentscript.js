@@ -142,7 +142,7 @@ if ( !abort ) {
         //  solution is implemented (possibly cross-extensions messaging).
         //  Try to find an actual image already present in the document.
         if ( (elem = document.querySelector('link[href*="favicon"]')) ) {
-            internalURL += 'r=' + rencodeURIComponent(elem.href) + '&';
+            internalURL += 'r=' + encodeURIComponent(elem.href) + '&';
         } else if ( (elem = document.querySelector('img[src]')) ) {
             if ( typeof elem.src === 'string' && elem.src !== '' ) {
                 internalURL += 'r=' + encodeURIComponent(elem.src) + '&';
