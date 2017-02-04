@@ -509,8 +509,47 @@ if ( !abort ) {
         scriptlet: scriptlet,
         exceptions: [
             'hangouts.google.com',
+            'messenger.com',
             'meet.google.com',
         ],
+    });
+})();
+
+/*******************************************************************************
+
+    Upmanager
+
+    https://github.com/uBlockOrigin/uAssets/issues/251#issuecomment-276257642
+
+**/
+
+(function() {
+    'use strict';
+
+    if ( abort ) { return; }
+
+    var scriptlet = function() {
+        var magic = String.fromCharCode(Date.now() % 26 + 97) +
+                    Math.floor(Math.random() * 982451653 + 982451653).toString(36);
+        var oe = window.error;
+        window.onerror = function(msg, src, line, col, error) {
+            if ( msg.indexOf(magic) !== -1 ) { return true; }
+            if ( oe instanceof Function ) {
+                return oe(msg, src, line, col, error);
+            }
+        }.bind();
+        Object.defineProperty(window, 'upManager', {
+            set: function() {
+                throw new Error(magic);
+            }
+        });
+    };
+
+    scriptlets.push({
+        scriptlet: scriptlet,
+        targets: [
+            'veteranstoday.com',
+        ]
     });
 })();
 
