@@ -572,7 +572,7 @@ if ( !abort ) {
         return new RegExp('(^|\.)(' + aa.map(restrFromString).join('|') + ')$');
     };
 
-    var scriptText = [], entry, re;
+    var scriptText = ['/* uBlock Origin Extra */'], entry, re;
 
     while ( (entry = scriptlets.shift()) ) {
         if ( Array.isArray(entry.targets) ) {
