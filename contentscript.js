@@ -229,7 +229,10 @@ if ( !abort ) {
     };
 
     scriptlets.push({
-        scriptlet: scriptlet
+        scriptlet: scriptlet,
+        exceptions: [
+            'beam.pro',
+        ]
     });
 })();
 
