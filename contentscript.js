@@ -224,6 +224,7 @@ if ( !abort ) {
             OPEN: { value: RealWebSocket.OPEN, enumerable: true },
             CLOSING: { value: RealWebSocket.CLOSING, enumerable: true },
             CLOSED: { value: RealWebSocket.CLOSED, enumerable: true },
+            name: { value: 'WebSocket' },
             prototype: { value: RealWebSocket.prototype }
         });
     };
