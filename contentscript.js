@@ -553,7 +553,6 @@ if ( !abort ) {
         scriptlet: scriptlet,
         targets: [
             'allthetests.com',
-			'ancient-origins.net',
             'biology-online.org',
             'grammarist.com',
             'jerusalemonline.com',
