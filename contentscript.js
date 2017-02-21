@@ -552,6 +552,13 @@ if ( !abort ) {
     scriptlets.push({
         scriptlet: scriptlet,
         targets: [
+            'allthetests.com',
+            'biology-online.org',
+            'grammarist.com',
+            'jerusalemonline.com',
+            'lucianne.com',
+            'phonesreview.co.uk',
+            'thefreethoughtproject.com',
             'veteranstoday.com',
         ]
     });
