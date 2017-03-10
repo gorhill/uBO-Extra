@@ -344,54 +344,64 @@ if ( !abort ) {
     var scriptlet = function() {
         var magic = String.fromCharCode(Date.now() % 26 + 97) +
                     Math.floor(Math.random() * 982451653 + 982451653).toString(36);
-        window.I10C = new Proxy({}, {
-            get: function(target, name) {
-                switch ( name ) {
-                case 'CanRun':
-                    return function() {
-                        return false;
-                    };
-                case 'HtmlStreaming':
-                    return {
-                        InsertTags: function(a, b) {
-                            document.write(b); // jshint ignore:line
-                        },
-                        InterceptNode: function() {
-                        },
-                        PatchBegin: function() {
-                        },
-                        PatchEnd: function() {
-                        },
-                        PatchInit: function() {
-                        },
-                        ReloadWithNoHtmlStreaming: function() {
-                        },
-                        RemoveTags: function() {
-                        },
-                        UpdateAttributes: function() {
+        var makeNanovisorProxy = function() {
+            return new Proxy({}, {
+                get: function(target, name) {
+                    switch ( name ) {
+                    case 'CanRun':
+                        return function() {
+                            return false;
+                        };
+                    case 'HtmlStreaming':
+                        return {
+                            InsertTags: function(a, b) {
+                                document.write(b); // jshint ignore:line
+                            },
+                            InterceptNode: function() {
+                            },
+                            PatchBegin: function() {
+                            },
+                            PatchEnd: function() {
+                            },
+                            PatchInit: function() {
+                            },
+                            ReloadWithNoHtmlStreaming: function() {
+                            },
+                            RemoveTags: function() {
+                            },
+                            UpdateAttributes: function() {
+                            }
+                        };
+                    default:
+                        if ( target[name] === undefined ) {
+                            throw new Error(magic);
                         }
-                    };
-                default:
-                    if ( target[name] === undefined ) {
-                        throw new Error(magic);
+                        return target[name];
                     }
-                    return target[name];
+                },
+                set: function(target, name, value) {
+                    switch ( name ) {
+                    case 'CanRun':
+                        break;
+                    default:
+                        target[name] = value;
+                    }
                 }
-            },
-            set: function(target, name, value) {
-                switch ( name ) {
-                case 'CanRun':
-                    break;
-                default:
-                    target[name] = value;
-                }
-            }
-        });
+            });
+        };
+        window.I10C = makeNanovisorProxy();
         window.INSTART = new Proxy({}, {
             get: function(target, name) {
                 switch ( name ) {
                 case 'Init':
-                    return function() {
+                    return function(a) {
+                        if (
+                            a instanceof Object &&
+                            typeof a.nanovisorGlobalNameSpace === 'string' &&
+                            a.nanovisorGlobalNameSpace !== ''
+                        ) {
+                            window[a.nanovisorGlobalNameSpace] = makeNanovisorProxy();
+                        }
                     };
                 default:
                     if ( target[name] === undefined ) {
