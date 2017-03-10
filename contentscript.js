@@ -102,6 +102,12 @@ if ( !abort ) {
 
     if ( abort ) { return; }
 
+    // webRequest API is websocket-aware as of Chromium 58: no need to
+    // wrap for Chromium 58 and above.
+    if ( /\bChrom(:?e|ium)\/(?:[34][0-9]|5[0-7])\b/.test(navigator.userAgent) === false ) {
+        return;
+    }
+
     // https://bugs.chromium.org/p/chromium/issues/detail?id=129353
     // https://github.com/gorhill/uBlock/issues/956
     // https://github.com/gorhill/uBlock/issues/1497
