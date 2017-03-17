@@ -519,9 +519,15 @@ if ( !abort ) {
         };
         if ( window.RTCPeerConnection instanceof Function ) {
             window.RTCPeerConnection = bound;
+            Object.defineProperty(window.RTCPeerConnection, 'name', {
+                value: 'RTCPeerConnection'
+            });
         }
         if ( window.webkitRTCPeerConnection instanceof Function ) {
             window.webkitRTCPeerConnection = bound;
+            Object.defineProperty(window.webkitRTCPeerConnection, 'name', {
+                value: 'webkitRTCPeerConnection'
+            });
         }
     };
 
