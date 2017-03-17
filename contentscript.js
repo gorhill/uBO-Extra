@@ -137,34 +137,19 @@ if ( !abort ) {
     self.addEventListener(contentScriptSecret, function(ev) {
         var details = ev.detail || {};
         if ( details.what !== 'websocket' ) { return; }
-        var onResponseReceived = function(sender, ok) {
+        var onResponseReceived = function(sender) {
             this.onload = this.onerror = null;
-            dispatchEvent(new CustomEvent(sender, { detail: ok ? '' : 'nope' }));
+            dispatchEvent(new CustomEvent(sender, { detail: this.status !== 0 ? '' : 'nope' }));
         };
-        var elem;
-        var internalURL = window.location.origin + '?';
-        // https://github.com/gorhill/uBO-Extra/issues/7
-        //  Not a real fix, rather a mitigation to the issue until a long-term
-        //  solution is implemented (possibly cross-extensions messaging).
-        //  Try to find an actual image already present in the document.
-        if ( (elem = document.querySelector('link[href*="favicon"]')) ) {
-            internalURL += 'r=' + encodeURIComponent(elem.href) + '&';
-        } else if ( (elem = document.querySelector('img[src]')) ) {
-            if ( typeof elem.src === 'string' && elem.src !== '' ) {
-                internalURL += 'r=' + encodeURIComponent(elem.src) + '&';
-            }
-        } else if ( (elem = document.querySelector('input[type="image"]')) ) {
-            if ( typeof elem.src === 'string' && elem.src !== '' ) {
-                internalURL += 'r=' + encodeURIComponent(elem.src) + '&';
-            }
-        }
-        internalURL +=
-            'url=' + encodeURIComponent(details.url) +
+        var url = window.location.origin + '?' +
+            'r=' + encodeURIComponent(window.location.origin) + '&' +
+            'u=' + encodeURIComponent(details.url) +
             '&ubofix=f41665f3028c7fd10eecf573336216d3';
-        var img = new Image();
-        img.src = internalURL;
-        img.onload = onResponseReceived.bind(img, details.sender, true);
-        img.onerror = onResponseReceived.bind(img, details.sender, false);
+        var xhr = new XMLHttpRequest();
+        xhr.open('HEAD', url);
+        xhr.onload = onResponseReceived.bind(xhr, details.sender);
+        xhr.onerror = onResponseReceived.bind(xhr, details.sender);
+        xhr.send();
     });
 
     // WebSocket reference: https://html.spec.whatwg.org/multipage/comms.html
