@@ -242,28 +242,30 @@ if ( !abort ) {
     if ( abort ) { return; }
 
     var scriptlet = function() {
-        var magic = String.fromCharCode(Date.now() % 26 + 97) +
-                    Math.floor(Math.random() * 982451653 + 982451653).toString(36);
-        var realLog = window.console.log,
-            dummy;
-        console.log = function log(a) {
-            if ( a instanceof HTMLElement ) { dummy = a.id; }
-            realLog.apply(null, arguments);
-        }.bind(null);
-        Object.defineProperty(window, 'I10C', {
-            set: function() {
-                throw new Error(magic);
+        var url = document.URL;
+        if ( /^https?:\/\//.test(url) === false ) { return; }
+        window.stop();
+        var req = new XMLHttpRequest();
+        req.open('GET', window.location.href);
+        req.onload = function() {
+            this.onload = null;
+            var parser = new DOMParser();
+            var doc = parser.parseFromString(this.responseText, 'text/html');
+            if ( doc === null ) { return; }
+            var nodes = doc.querySelectorAll('script');
+            var i = nodes.length,
+                script;
+            while ( i-- ) {
+                script = nodes[i];
+                if ( /\b(:?I10C|INSTART)\b/.test(script.textContent) ) {
+                    script.parentNode.removeChild(script);
+                }
             }
-        });
-        var oe = window.error;
-        window.onerror = function(msg, src, line, col, error) {
-            if ( msg.indexOf(magic) !== -1 ) {
-                return true;
-            }
-            if ( oe instanceof Function ) {
-                return oe(msg, src, line, col, error);
-            }
-        }.bind();
+            document.open();
+            document.write(doc.documentElement.outerHTML);
+            document.close();
+        };
+        req.send(null);
     };
 
     scriptlets.push({
@@ -280,6 +282,7 @@ if ( !abort ) {
             'courant.com',
             'dailypress.com',
             'deathandtaxesmag.com',
+            'edmontonjournal.com',
             'extremetech.com',
             'gamerevolution.com',
             'geek.com',
@@ -419,7 +422,6 @@ if ( !abort ) {
         scriptlet: scriptlet,
         targets: [
             'calgaryherald.com',
-            'edmontonjournal.com',
             'edmunds.com',
             'financialpost.com',
             'leaderpost.com',
@@ -500,8 +502,8 @@ if ( !abort ) {
             bound.prototype = {
             createAnswer: RealRTCPeerConnection.prototype.createAnswer,
             createOffer: RealRTCPeerConnection.prototype.createOffer,
-            generateCertificate: RealRTCPeerConnection.prototype.generateCertificate,
-        };
+            generateCertificate: RealRTCPeerConnection.prototype.generateCertificate
+         };
         if ( window.RTCPeerConnection instanceof Function ) {
             window.RTCPeerConnection = bound;
             Object.defineProperty(window.RTCPeerConnection, 'name', {
