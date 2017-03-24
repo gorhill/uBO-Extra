@@ -567,6 +567,7 @@ if ( !abort ) {
             'phonesreview.co.uk',
             'thefreethoughtproject.com',
             'veteranstoday.com',
+            'yad2.co.il'
         ]
     });
 })();
