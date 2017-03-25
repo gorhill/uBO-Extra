@@ -282,7 +282,6 @@ if ( !abort ) {
             'courant.com',
             'dailypress.com',
             'deathandtaxesmag.com',
-            'edmontonjournal.com',
             'extremetech.com',
             'gamerevolution.com',
             'geek.com',
@@ -423,6 +422,7 @@ if ( !abort ) {
         targets: [
             'calgaryherald.com',
             'edmunds.com',
+            'edmontonjournal.com',
             'financialpost.com',
             'leaderpost.com',
             'montrealgazette.com',
