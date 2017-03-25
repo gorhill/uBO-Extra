@@ -421,8 +421,8 @@ if ( !abort ) {
         scriptlet: scriptlet,
         targets: [
             'calgaryherald.com',
-            'edmunds.com',
             'edmontonjournal.com',
+            'edmunds.com',
             'financialpost.com',
             'leaderpost.com',
             'montrealgazette.com',
