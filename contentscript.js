@@ -262,7 +262,7 @@ if ( !abort ) {
                 }
             }
             document.open();
-            document.write(doc.documentElement.outerHTML);
+            document.write(doc.documentElement.outerHTML); // jshint ignore:line
             document.close();
         };
         req.send(null);
@@ -275,8 +275,8 @@ if ( !abort ) {
             'boston.com',
             'capitalgazette.com',
             'carrollcountytimes.com',
-            'celebuzz.com',
             'celebslam.com',
+            'celebuzz.com',
             'chicagotribune.com',
             'citypaper.com',
             'computershopper.com',
@@ -539,8 +539,8 @@ if ( !abort ) {
         scriptlet: scriptlet,
         exceptions: [
             'hangouts.google.com',
-            'messenger.com',
             'meet.google.com',
+            'messenger.com',
         ],
     });
 })();
@@ -590,7 +590,8 @@ if ( !abort ) {
             'phonesreview.co.uk',
             'thefreethoughtproject.com',
             'veteranstoday.com',
-            'yad2.co.il'
+            'walla.co.il',
+            'yad2.co.il',
         ]
     });
 })();
