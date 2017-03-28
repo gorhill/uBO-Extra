@@ -2,6 +2,8 @@
 
 A companion extension to [uBlock Origin](https://github.com/gorhill/uBlock): to gain ability to foil early anti-user mechanisms working around content blockers or even a browser privacy settings.
 
+See ["Sites on which uBO-Extra is useful"](https://github.com/gorhill/uBO-Extra/wiki/Sites-on-which-uBO-Extra-is-useful).
+
 ### Installation
 
 Manually, using your browser's _"Load unpacked extension..."_ feature:
