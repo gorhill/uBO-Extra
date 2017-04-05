@@ -325,7 +325,6 @@ if ( !abort ) {
             'twincities.com',
             'vancouversun.com',
             'vibe.com',
-            'weather.com',
             'wowhead.com',
             'zam.com',
         ]
