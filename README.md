@@ -2,6 +2,8 @@
 
 A companion extension to [uBlock Origin](https://github.com/gorhill/uBlock): to gain ability to foil early anti-user mechanisms working around content blockers or even a browser privacy settings.
 
+The extension is useful only for Chromium-based browsers. There is no need for such an extension so far on Firefox, and thus there is no version for Firefox.
+
 See ["Sites on which uBO-Extra is useful"](https://github.com/gorhill/uBO-Extra/wiki/Sites-on-which-uBO-Extra-is-useful).
 
 ### Installation
