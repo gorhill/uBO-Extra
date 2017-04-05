@@ -257,7 +257,7 @@ if ( !abort ) {
                 script;
             while ( i-- ) {
                 script = nodes[i];
-                if ( /\b(:?I10C|INSTART)\b/.test(script.textContent) ) {
+                if ( /\b(?:I10C|INSTART)\b/.test(script.textContent) ) {
                     script.parentNode.removeChild(script);
                 }
             }
