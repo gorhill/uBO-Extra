@@ -351,10 +351,6 @@ if ( !abort ) {
             return new Proxy({}, {
                 get: function(target, name) {
                     switch ( name ) {
-                    case 'CanRun':
-                        return function() {
-                            return false;
-                        };
                     case 'HtmlStreaming':
                         return {
                             InsertTags: function(a, b) {
@@ -376,15 +372,15 @@ if ( !abort ) {
                             }
                         };
                     default:
-                        if ( target[name] === undefined ) {
-                            throw new Error(magic);
-                        }
                         return target[name];
                     }
                 },
                 set: function(target, name, value) {
                     switch ( name ) {
                     case 'CanRun':
+                        target.CanRun = function() {
+                            return false;
+                        };
                         break;
                     default:
                         target[name] = value;
@@ -392,6 +388,7 @@ if ( !abort ) {
                 }
             });
         };
+        var instartInit;
         window.I10C = makeNanovisorProxy();
         window.INSTART = new Proxy({}, {
             get: function(target, name) {
@@ -405,6 +402,13 @@ if ( !abort ) {
                         ) {
                             window[a.nanovisorGlobalNameSpace] = makeNanovisorProxy();
                         }
+                        a.enableHtmlStreaming = false;
+                        a.enableQSCallDiffComputationConfig = false;
+                        a.enableQuerySelectorMonitoring = false;
+                        a.serveNanovisorSameDomain = false;
+                        a.virtualDomains = 0;
+                        a.virtualizeDomains = [];
+                        instartInit(a);
                     };
                 default:
                     if ( target[name] === undefined ) {
@@ -416,6 +420,7 @@ if ( !abort ) {
             set: function(target, name, value) {
                 switch ( name ) {
                 case 'Init':
+                    instartInit = value;
                     break;
                 default:
                     target[name] = value;
