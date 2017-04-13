@@ -224,6 +224,7 @@ if ( !abort ) {
         scriptlet: scriptlet,
         exceptions: [
             'beam.pro',
+            'plex.tv',
         ]
     });
 })();
