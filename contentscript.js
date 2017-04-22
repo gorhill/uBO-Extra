@@ -291,6 +291,7 @@ if ( !abort ) {
             'edmontonsun.com',
             'everydayhealth.com',
             'extremetech.com',
+            'fieldandstream.com',
             'gamerevolution.com',
             'geek.com',
             'gofugyourself.com',
