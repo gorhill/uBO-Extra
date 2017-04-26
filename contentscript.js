@@ -624,7 +624,7 @@ if ( !abort ) {
     };
 
     var reFromArray = function(aa) {
-        return new RegExp('(^|\.)(' + aa.map(restrFromString).join('|') + ')$');
+        return new RegExp('(^|\\.)(' + aa.map(restrFromString).join('|') + ')$');
     };
 
     var scriptText = [], entry, re;
