@@ -313,6 +313,7 @@ if ( !abort ) {
             'popphoto.com',
             'ranchosantafereview.com',
             'ranker.com',
+            'realclearpolitics.com',
             'redeyechicago.com',
             'sandiegouniontribune.com',
             'saveur.com',
