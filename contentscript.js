@@ -258,7 +258,7 @@ if ( !abort ) {
                 script;
             while ( i-- ) {
                 script = nodes[i];
-                if ( /\b(?:g00|I10C|INSTART)\b/.test(script.textContent) ) {
+                if ( /\b(?:g00|I10C|I11C|INSTART)\b/.test(script.textContent) ) {
                     script.parentNode.removeChild(script);
                 }
             }
@@ -326,6 +326,7 @@ if ( !abort ) {
             'sun-sentinel.com',
             'tf2outpost.com',
             'thefrisky.com',
+            'thespruce.com',
             'thesuperficial.com',
             'timeanddate.com',
             'tmn.today',
