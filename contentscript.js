@@ -21,6 +21,8 @@
     Home: https://github.com/gorhill/uBO-WebSocket
 */
 
+'use strict';
+
 /* global HTMLDocument, XMLDocument */
 
 /*******************************************************************************
@@ -43,8 +45,6 @@ var scriptlets = [],
 **/
 
 var abort = (function() {
-    'use strict';
-
     var doc = document;
     if ( doc instanceof HTMLDocument === false ) {
         if (
@@ -98,8 +98,6 @@ if ( !abort ) {
 **/
 
 (function() {
-    'use strict';
-
     if ( abort ) { return; }
 
     // webRequest API is websocket-aware as of Chromium 58: no need to
@@ -173,7 +171,6 @@ if ( !abort ) {
 
     var scriptlet = function(secret) {
         var RealWebSocket = window.WebSocket,
-            closeWebSocket = Function.prototype.call.bind(RealWebSocket.prototype.close),
             addEventListener = self.addEventListener.bind(window),
             removeEventListener = self.removeEventListener.bind(window),
             dispatchEvent = self.dispatchEvent.bind(window);
@@ -238,8 +235,6 @@ if ( !abort ) {
 **/
 
 (function() {
-    'use strict';
-
     if ( abort ) { return; }
 
     var scriptlet = function() {
@@ -355,8 +350,6 @@ if ( !abort ) {
 **/
 
 (function() {
-    'use strict';
-
     if ( abort ) { return; }
 
     var scriptlet = function() {
@@ -480,8 +473,6 @@ if ( !abort ) {
 **/
 
 (function() {
-    'use strict';
-
     if ( abort ) { return; }
 
     var scriptlet = function() {
@@ -520,14 +511,11 @@ if ( !abort ) {
 
 /*
 (function() {
-    'use strict';
-
     if ( abort ) { return; }
 
     var scriptlet = function() {
         var realConsole = console,
-            realLog = console.log,
-            dummy;
+            realLog = console.log;
         console.log = function () {
             for ( var i = 0; i < arguments.length; i++ ) {
                 if ( arguments[i] instanceof HTMLElement ) { return; }
@@ -554,8 +542,6 @@ if ( !abort ) {
 **/
 
 (function() {
-    'use strict';
-
     if ( abort ) { return; }
 
     // Nothing to fix for browsers not supporting RTCPeerConnection.
@@ -647,8 +633,6 @@ if ( !abort ) {
 **/
 
 (function() {
-    'use strict';
-
     if ( abort ) { return; }
 
     var scriptlet = function() {
@@ -696,8 +680,6 @@ if ( !abort ) {
 **/
 
 (function() {
-    'use strict';
-
     if ( scriptlets.length === 0 ) { return; }
 
     var restrFromString = function(s) {
