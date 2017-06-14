@@ -473,6 +473,43 @@ if ( !abort ) {
 
 /*******************************************************************************
 
+    Instart Logic buster 3
+
+    https://github.com/gorhill/uBlock/issues/2702
+
+**/
+
+(function() {
+    'use strict';
+
+    if ( abort ) { return; }
+
+    var scriptlet = function() {
+        var realConsole = console,
+            realLog = console.log,
+            dummy;
+        console.log = function () {
+            for ( var i = 0; i < arguments.length; i++ ) {
+                arg = arguments[i];
+                if ( arg instanceof HTMLElement ) {
+                    dummy = arg.toString() + arg.id;
+                }
+            }
+            return realLog.apply(realConsole, arguments);
+        }.bind(console);
+        Object.defineProperty(console.log, 'name', { value: 'log' });
+    };
+
+    scriptlets.push({
+        scriptlet: scriptlet,
+        targets: [
+            'hockeysfuture.com',
+        ]
+    });
+})();
+
+/*******************************************************************************
+
     WebRTC abuse: generic.
 
     https://github.com/uBlockOrigin/uAssets/issues/251
