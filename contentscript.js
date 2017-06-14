@@ -299,6 +299,7 @@ if ( !abort ) {
             'gofugyourself.com',
             'growthspotter.com',
             'hearthhead.com',
+            'hockeysfuture.com',
             'hoylosangeles.com',
             'ibtimes.com',
             'idigitaltimes.com',
