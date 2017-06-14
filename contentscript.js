@@ -490,7 +490,7 @@ if ( !abort ) {
             dummy;
         console.log = function () {
             for ( var i = 0; i < arguments.length; i++ ) {
-                arg = arguments[i];
+                var arg = arguments[i];
                 if ( arg instanceof HTMLElement ) {
                     dummy = arg.toString() + arg.id;
                 }
@@ -507,6 +507,43 @@ if ( !abort ) {
         ]
     });
 })();
+
+/*******************************************************************************
+
+    Instart Logic console detection defuser.
+
+    To allow using the dev tools to investigate IL's code:
+    - Un-comment out the block of code
+    - Add the site you wish to investigate in the `targets` array.
+
+**/
+
+/*
+(function() {
+    'use strict';
+
+    if ( abort ) { return; }
+
+    var scriptlet = function() {
+        var realConsole = console,
+            realLog = console.log,
+            dummy;
+        console.log = function () {
+            for ( var i = 0; i < arguments.length; i++ ) {
+                if ( arguments[i] instanceof HTMLElement ) { return; }
+            }
+            return realLog.apply(realConsole, arguments);
+        }.bind(console);
+        Object.defineProperty(console.log, 'name', { value: 'log' });
+    };
+
+    scriptlets.push({
+        scriptlet: scriptlet,
+        targets: [
+        ]
+    });
+})();
+*/
 
 /*******************************************************************************
 
