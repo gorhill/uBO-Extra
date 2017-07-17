@@ -304,6 +304,7 @@ if ( !abort ) {
             'lolking.net',
             'mcall.com',
             'mamaslatinas.com',
+            'metrolyrics.com',
             'mmo-champion.com',
             'nasdaq.com',
             'orlandosentinel.com',
@@ -496,6 +497,7 @@ if ( !abort ) {
         scriptlet: scriptlet,
         targets: [
             'hockeysfuture.com',
+            'metacritic.com'
         ]
     });
 })();
