@@ -336,6 +336,7 @@ if ( !abort ) {
             'twincities.com',
             'vancouversun.com',
             'vibe.com',
+            'wrestlezone.com',
             'winnipegsun.com',
             'wowhead.com',
             'zam.com',
