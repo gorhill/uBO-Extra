@@ -320,7 +320,6 @@ if ( !abort ) {
             'sandiegouniontribune.com',
             'saveur.com',
             'sherdog.com',
-            'slickdeals.net',
             'southflorida.com',
             'spin.com',
             'sporcle.com',
