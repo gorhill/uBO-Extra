@@ -622,6 +622,7 @@ if ( !abort ) {
     scriptlets.push({
         scriptlet: scriptlet,
         exceptions: [
+            'appear.in',
             'hangouts.google.com',
             'meet.google.com',
             'messenger.com',
