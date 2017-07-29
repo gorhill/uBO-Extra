@@ -275,7 +275,6 @@ if ( !abort ) {
             'celebslam.com',
             'celebuzz.com',
             'chicagotribune.com',
-            'chowhound.com',
             'citypaper.com',
             'computershopper.com',
             'courant.com',
@@ -498,6 +497,7 @@ if ( !abort ) {
     scriptlets.push({
         scriptlet: scriptlet,
         targets: [
+            'chowhound.com',
             'hockeysfuture.com',
             'metacritic.com'
         ]
