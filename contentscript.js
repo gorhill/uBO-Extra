@@ -275,6 +275,7 @@ if ( !abort ) {
             'celebslam.com',
             'celebuzz.com',
             'chicagotribune.com',
+            'chowhound.com',
             'citypaper.com',
             'computershopper.com',
             'courant.com',
