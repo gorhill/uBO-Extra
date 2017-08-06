@@ -310,7 +310,6 @@ if ( !abort ) {
             'nasdaq.com',
             'orlandosentinel.com',
             'ottawasun.com',
-            'pcmag.com',
             'popphoto.com',
             'popsci.com',
             'ranchosantafereview.com',
@@ -499,7 +498,8 @@ if ( !abort ) {
         targets: [
             'chowhound.com',
             'hockeysfuture.com',
-            'metacritic.com'
+            'metacritic.com',
+            'pcmag.com',
         ]
     });
 })();
