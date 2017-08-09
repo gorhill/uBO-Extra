@@ -325,6 +325,7 @@ if ( !abort ) {
             'stereogum.com',
             'sun-sentinel.com',
             'tf2outpost.com',
+            'thebalance.com',
             'thefrisky.com',
             'thespruce.com',
             'thesuperficial.com',
