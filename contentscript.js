@@ -553,6 +553,7 @@ if ( !abort ) {
             'baltimoresun.com',
             'boston.com',
             'dailypress.com',
+            'gofugyourself.com',
             'msn.com',
         ]
     });
