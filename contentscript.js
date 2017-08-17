@@ -494,7 +494,6 @@ if ( !abort ) {
         targets: [
             'chowhound.com',
             'hockeysfuture.com',
-            'metacritic.com',
             'pcmag.com',
             'wikia.com',
         ]
@@ -560,6 +559,7 @@ if ( !abort ) {
             'chroniclelive.co.uk',
             'dailypress.com',
             'gofugyourself.com',
+            'metacritic.com',
             'msn.com',
         ]
     });
