@@ -512,8 +512,8 @@ if ( !abort ) {
     var scriptlet = function() {
         var magic = String.fromCharCode(Date.now() % 26 + 97) +
                     Math.floor(Math.random() * 982451653 + 982451653).toString(36),
-            targets = [ 'atob', 'performance', 'console.error' ],
-            re = /\b(?:Instart-|IXC_)/;
+            targets = [ 'atob', 'console.error', 'INSTART', 'performance' ],
+            re = /\b(?:Instart-|I10C|IXC_|INSTART)/;
         var makeGetter = function(v) {
             return function() {
                 var script = document.currentScript;
