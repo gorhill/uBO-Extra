@@ -557,6 +557,7 @@ if ( !abort ) {
             'baltimoresun.com',
             'boston.com',
             'chroniclelive.co.uk',
+            'comingsoon.net',
             'dailypress.com',
             'gofugyourself.com',
             'metacritic.com',
