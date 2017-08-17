@@ -23,7 +23,7 @@
 
 'use strict';
 
-/* global HTMLDocument, XMLDocument */
+/* global dispatchEvent, HTMLDocument, XMLDocument */
 
 /*******************************************************************************
 
@@ -188,8 +188,7 @@ if ( !abort ) {
         };
 
         var WrappedWebSocket = function(url) {
-            var surl = url.toString(),
-                dummy = url.toString();
+            var surl = url.toString();
             // Throw correct exceptions if the constructor is used improperly.
             if ( this instanceof WrappedWebSocket === false ) {
                 return RealWebSocket();
@@ -234,6 +233,7 @@ if ( !abort ) {
 
 **/
 
+/*
 (function() {
     if ( abort ) { return; }
 
@@ -270,6 +270,7 @@ if ( !abort ) {
         ]
     });
 })();
+*/
 
 /*******************************************************************************
 
