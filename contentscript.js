@@ -428,7 +428,6 @@ if ( !abort ) {
             'chowhound.com',
             'hockeysfuture.com',
             'pcmag.com',
-            'wikia.com',
         ]
     });
 })();
@@ -551,6 +550,7 @@ if ( !abort ) {
             'twincities.com',
             'vancouversun.com',
             'vibe.com',
+            'wikia.com',
             'winnipegsun.com',
             'wowhead.com',
             'wrestlezone.com',
