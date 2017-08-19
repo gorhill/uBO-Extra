@@ -545,6 +545,7 @@ if ( !abort ) {
             'redeyechicago.com',
             'sandiegouniontribune.com',
             'saveur.com',
+            'seattlepi.com',
             'sherdog.com',
             'southflorida.com',
             'spin.com',
