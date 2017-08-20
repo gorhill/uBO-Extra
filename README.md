@@ -48,19 +48,6 @@ Further reading:
 
 ***
 
-Many web sites are starting to abuse WebRTC API to work around content blocker. uBO-Extra v2.3+ can prevent these web sites from abusing WebRTC to work around uBO.
-
-Related issues:
-- <https://github.com/uBlockOrigin/uAssets/issues/251>
-- <https://forums.lanik.us/viewtopic.php?p=110902#p110902>
-
-You can always visit `chrome://webrtc-internals/` to find out if a site is using WebRTC API (left: without uBO-Extra, right: with uBO-Extra):
-![jpost.com](https://cloud.githubusercontent.com/assets/585534/21578491/5f238ad6-cf50-11e6-9d27-a46e5e4673db.png)
-
-If you want to block WebRTC connections on a specific site, say `example.com`, use the filter `*$websocket,domain=example.com` in uBlock Origin.
-
-***
-
 The extension has no interactive UI, just an icon in the toolbar to remind it's enabled.
 
 Your browser should allow you to hide the icon if it annoys you. Use uBlock Origin's logger if you want to see and possibly filter WebSocket connections made visible by uBO-Extra.
