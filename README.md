@@ -42,6 +42,10 @@ Related issues:
 - <https://github.com/uBlockOrigin/uAssets/issues/227>
 - <https://www.reddit.com/r/wow/comments/5exq2d/wowheadcom_sucking_bandwidth/>
 
+Further reading:
+
+- ["Revealed: The naughty tricks used by web ads to bypass blockers"](https://www.theregister.co.uk/2017/08/11/ad_blocker_bypass_code/) (The Register)
+
 ***
 
 Many web sites are starting to abuse WebRTC API to work around content blocker. uBO-Extra v2.3+ can prevent these web sites from abusing WebRTC to work around uBO.
