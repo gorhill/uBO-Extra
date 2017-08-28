@@ -310,6 +310,7 @@ if ( !abort ) {
             'dailypress.com',
             'deathandtaxesmag.com',
             'delmartimes.net',
+            'dogtime.com',
             'download.cnet.com',
             'edmontonjournal.com',
             'edmontonsun.com',
