@@ -342,6 +342,7 @@ if ( !abort ) {
             'msn.com',
             'nasdaq.com',
             'nationalpost.com',
+            'newsarama.com',
             'orlandosentinel.com',
             'ottawacitizen.com',
             'ottawasun.com',
