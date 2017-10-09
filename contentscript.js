@@ -369,6 +369,7 @@ if ( !abort ) {
             'seattlepi.com',
             'sherdog.com',
             'southflorida.com',
+            'space.com',
             'spin.com',
             'sporcle.com',
             'stereogum.com',
