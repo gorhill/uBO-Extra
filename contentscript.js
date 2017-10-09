@@ -339,6 +339,7 @@ if ( !abort ) {
             'leaderpost.com',
             'legacy.com',
             'lifewire.com',
+            'livescience.com',
             'lolking.net',
             'mcall.com',
             'mamaslatinas.com',
