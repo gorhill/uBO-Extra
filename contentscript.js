@@ -376,6 +376,7 @@ if ( !abort ) {
             'space.com',
             'spin.com',
             'sporcle.com',
+            'sportingnews.com',
             'stereogum.com',
             'sun-sentinel.com',
             'superherohype.com',
