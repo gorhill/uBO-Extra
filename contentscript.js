@@ -389,6 +389,7 @@ if ( !abort ) {
             'thestarphoenix.com',
             'thoughtco.com',
             'timeanddate.com',
+            'tomshardware.com',
             'torontosun.com',
             'totalbeauty.com',
             'trustedreviews.com',
