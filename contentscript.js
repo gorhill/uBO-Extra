@@ -311,6 +311,7 @@ if ( !abort ) {
             'csgoutpost.com',
             'ctnow.com',
             'cycleworld.com',
+            'dailydot.com',
             'dailypress.com',
             'dayzdb.com',
             'deathandtaxesmag.com',
