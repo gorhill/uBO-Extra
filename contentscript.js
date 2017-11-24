@@ -237,7 +237,7 @@ if ( !abort ) {
     var scriptlet = function() {
         var magic = String.fromCharCode(Date.now() % 26 + 97) +
                     Math.floor(Math.random() * 982451653 + 982451653).toString(36),
-            targets = [ 'atob', 'console.error', 'INSTART', 'performance', 'require' ],
+            targets = [ 'atob', 'console.error', 'INSTART', 'INSTART_TARGET_NAME', 'performance', 'require' ],
             reScriptText = /\b(?:Instart-|I10C|IXC_|INSTART)/,
             reScriptSrc = /\babd.*?\/instart.js/;
         var validate = function() {
@@ -548,7 +548,7 @@ if ( !abort ) {
 
 **/
 
-/*
+
 (function() {
     if ( abort ) { return; }
 
@@ -567,10 +567,10 @@ if ( !abort ) {
     scriptlets.push({
         scriptlet: scriptlet,
         targets: [
+            'laptopmag.com'
         ]
     });
 })();
-*/
 
 /*******************************************************************************
 
