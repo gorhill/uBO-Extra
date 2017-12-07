@@ -55,7 +55,7 @@ var abort = (function() {
         }
     }
     if ( (doc.contentType || '').lastIndexOf('image/', 0) === 0 ) {
-        return true; 
+        return true;
     }
     return false;
 })();
@@ -401,6 +401,7 @@ if ( !abort ) {
             'trustedreviews.com',
             'tv.com',
             'twincities.com',
+            'twitch.tv',
             'vancouversun.com',
             'vibe.com',
             'washingtonpost.com',
