@@ -373,6 +373,7 @@ if ( !abort ) {
             'sandiegouniontribune.com',
             'saveur.com',
             'seattlepi.com',
+            'sfgate.com',
             'sherdog.com',
             'slate.com',
             'southflorida.com',
