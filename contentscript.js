@@ -370,6 +370,7 @@ if ( !abort ) {
             'realclearpolitics.com',
             'realitytea.com',
             'redeyechicago.com',
+            'salon.com',
             'sandiegouniontribune.com',
             'saveur.com',
             'seattlepi.com',
