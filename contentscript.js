@@ -430,6 +430,7 @@ if ( !abort ) {
             'totalbeauty.com',
             'trustedreviews.com',
             'tv.com',
+            'tvguide.com',
             'twincities.com',
             'utvdriver.com',
             'vancouversun.com',
