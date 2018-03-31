@@ -24,15 +24,6 @@ To foil hostile anti-user mechanisms used to work around content blockers or eve
 
 ***
 
-For browsers based on Chromium 57 and below, WebSocket connections are not available to the [chrome.webRequest API](https://developer.chrome.com/extensions/webRequest). This companion extension (it's pointless to use it as a standalone) will allow uBlock Origin to become aware of WebSocket connection attempts: they can be filtered, and will be reported in the logger.
-
-Related issues:
-
-- <https://github.com/gorhill/uBlock/issues/1936>
-- <https://bugs.chromium.org/p/chromium/issues/detail?id=129353>
-
-***
-
 Instart Logic's technology used to disguise third-party network requests as first-party network requests, **including** the writing/reading of third-party cookies as first-party cookies. I consider this to be extremely hostile to users, even those **not** using a content blocker, as it allows third-party servers to read/write cookies even if a user chose to block 3rd-party cookies through your browser setting.
 
 The company behind the technology understands how hostile its technology is to users, and thus tries to hide what is being done by making it difficult to investigate by detecting whether the browser's developer console is opened, and when it detects it is opened, it ceases completely to make use of the obfuscation mechanism. The developer console-detecting code works only for Chromium-based browsers however, and therefore the obfuscation technology is not used when using Firefox (a different web page is served for Firefox).
