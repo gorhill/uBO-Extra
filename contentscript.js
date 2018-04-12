@@ -315,6 +315,7 @@ if ( !abort ) {
             'workingmother.com',
             'wowhead.com',
             'wrestlezone.com',
+            'xda-developers.com',
             'yachtingmagazine.com',
             'zam.com',
         ]
