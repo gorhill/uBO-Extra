@@ -14,6 +14,8 @@ Manually, using your browser's _"Load unpacked extension..."_ feature:
 - Click _"Load unpacked extension..."_, select the zip file you downloaded above.
 - Keep in mind you will have to update manually when a new version is released.
 
+OR...
+
 From the Chrome store:
 - <https://chrome.google.com/webstore/detail/ublock-origin-extra/pgdnlhfefecpicbbihgmbmffkjpaplco>.
 - New version will be updated automatically.
