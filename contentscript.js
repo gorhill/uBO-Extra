@@ -306,6 +306,7 @@ if ( !abort ) {
             'trustedreviews.com',
             'tv.com',
             'tvguide.com',
+            'tvtropes.org',
             'twincities.com',
             'utvdriver.com',
             'vancouversun.com',
