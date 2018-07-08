@@ -322,6 +322,7 @@ if ( !abort ) {
             'wakeboardingmag.com',
             'washingtonpost.com',
             'waterskimag.com',
+            'webmd.com',
             'wikia.com',
             'windowscentral.com',
             'windsorstar.com',
