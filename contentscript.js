@@ -110,7 +110,7 @@ if ( !abort ) {
                 'performance',
                 'require'
             ],
-            reScriptText = /\b(?:Instart-|I10C|IXC_|INSTART)/,
+            reScriptText = /\b(?:Instart-|I10C|I11C|IXC_|INSTART)/,
             reScriptSrc = /\babd.*?\/instart.js/;
         var validate = function() {
             var script = document.currentScript;
