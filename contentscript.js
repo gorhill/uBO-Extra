@@ -251,6 +251,7 @@ if ( !abort ) {
             'msn.com',
             'musicfeeds.com.au',
             'mustangandfords.com',
+            'mysanantonio.com',
             'nasdaq.com',
             'nationalpost.com',
             'newsarama.com',
