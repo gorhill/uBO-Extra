@@ -110,10 +110,12 @@ if ( !abort ) {
                 'require'
             ],
             reScriptText = /\b(?:Instart-|I10C|I11C|IXC_|INSTART)/,
-            reScriptSrc = /\babd.*?\/instart.js/;
+            reScriptSrc = /\babd.*?\/instart.js/,
+            thisScript = document.currentScript;
         var validate = function() {
             var script = document.currentScript;
             if ( script instanceof HTMLScriptElement === false ) { return; }
+            if ( script === thisScript ) { return; }
             if ( script.src === '' ) {
                 if ( reScriptText.test(script.textContent) ) {
                     throw new ReferenceError(magic);
