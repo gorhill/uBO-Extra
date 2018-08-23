@@ -110,7 +110,7 @@ if ( !abort ) {
                 'require'
             ],
             reScriptText = /\b(?:Instart-|I10C|I11C|IXC_|INSTART)/,
-            reScriptSrc = /\babd.*?\/instart.js/,
+            reScriptSrc = /\babd.*?\/instart.js|\?i10c\./,
             thisScript = document.currentScript;
         var validate = function() {
             var script = document.currentScript;
@@ -452,7 +452,7 @@ if ( !abort ) {
         targets: [
             'calgaryherald.com',
             'edmontonjournal.com',
-            'edmunds.com',
+//            'edmunds.com',
             'financialpost.com',
             'leaderpost.com',
             'montrealgazette.com',
