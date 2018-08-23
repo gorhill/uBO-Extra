@@ -106,7 +106,6 @@ if ( !abort ) {
                 'console.error',
                 'INSTART',
                 'INSTART_TARGET_NAME',
-                'navigator.vendor',
                 'performance',
                 'require'
             ],
