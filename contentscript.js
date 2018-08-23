@@ -106,6 +106,7 @@ if ( !abort ) {
                 'console.error',
                 'INSTART',
                 'INSTART_TARGET_NAME',
+                'navigator.userAgent',
                 'performance',
                 'require'
             ],
@@ -452,7 +453,6 @@ if ( !abort ) {
         targets: [
             'calgaryherald.com',
             'edmontonjournal.com',
-//            'edmunds.com',
             'financialpost.com',
             'leaderpost.com',
             'montrealgazette.com',
