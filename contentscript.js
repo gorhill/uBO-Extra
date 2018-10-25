@@ -178,6 +178,7 @@ if ( !abort ) {
             'capitalgazette.com',
             'carrollcountytimes.com',
             'cattime.com',
+            'cbssports.com',
             'chicagotribune.com',
             'chowhound.com',
             'chron.com',
