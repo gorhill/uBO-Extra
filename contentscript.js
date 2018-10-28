@@ -1,3 +1,15 @@
+// ==UserScript==
+// @encoding utf-8
+// @name uBlock Origin Extra
+// @description A companion extension to uBlock Origin: to gain ability to foil early hostile anti-user mechanisms working around content blockers.
+// @author Raymond Hill
+// @version 2.78
+// @homepage https://github.com/gorhill/uBO-Extra
+// @icon https://github.com/gorhill/uBO-Extra/raw/master/icon128.png
+// @license GNU GPL v3
+// @include *
+// ==/UserScript==
+
 /*******************************************************************************
 
     uBO-Extra - A companion extension to uBlock Origin: to gain ability to
