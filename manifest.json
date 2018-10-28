@@ -10,7 +10,7 @@
     {
       "matches": ["http://*/*", "https://*/*"],
       "match_about_blank": true,
-      "js": ["contentscript.js"],
+      "js": ["ubo-extra.user.js"],
       "run_at": "document_start",
       "all_frames": true
     }
