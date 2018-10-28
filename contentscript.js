@@ -8,6 +8,7 @@
 // @icon https://github.com/gorhill/uBO-Extra/raw/master/icon128.png
 // @license GNU GPL v3
 // @include *
+// @run-at document-start
 // ==/UserScript==
 
 /*******************************************************************************
