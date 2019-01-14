@@ -221,6 +221,7 @@ if ( !abort ) {
             'gamerevolution.com',
             'gamespot.com',
             'geek.com',
+            'goal.com',
             'gofugyourself.com',
             'growthspotter.com',
             'hearthhead.com',
