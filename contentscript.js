@@ -243,7 +243,6 @@ if ( !abort ) {
             'marlinmag.com',
             'medicaldaily.com',
             'medicinenet.com',
-            'metacritic.com',
             'metrolyrics.com',
             'mmo-champion.com',
             'momtastic.com',
