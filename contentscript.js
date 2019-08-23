@@ -227,7 +227,6 @@ if ( !abort ) {
             'hotbikeweb.com',
             'hoylosangeles.com',
             'ibtimes.com',
-            'ign.com',
             'infinitiev.com',
             'islands.com',
             'lajollalight.com',
