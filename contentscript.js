@@ -330,7 +330,6 @@ if ( !abort ) {
             'wakeboardingmag.com',
             'washingtonpost.com',
             'waterskimag.com',
-            'webmd.com',
             'wetteronline.de',
             'wibc.com',
             'wikia.com',
