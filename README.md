@@ -1,6 +1,6 @@
 # uBO-Extra
 
-**Important:** As of October 20, 2020, uBO-Extra is discontinued and is no longer present in the Chrome Web store. Instart Logic's anti-user agent technology appears to have gone away and consequently the extension has become useless, as its main purpose was to foil Instart Logic's 3rd parties obfuscation technology.
+**Important:** As of October 20, 2020, uBO-Extra is discontinued and is no longer present in the Chrome Web store. [Instart Logic](https://en.wikipedia.org/wiki/Instart_Logic)'s anti-user agent technology appears to have gone away and consequently the extension has become useless, as its main purpose was to foil Instart Logic's 3rd parties obfuscation technology.
 
 For the historical record, these were the extension stats when I unpublished it:
 ![uBO-Extra stats](https://user-images.githubusercontent.com/585534/96623667-b4798c80-12d9-11eb-827e-afe9a4d6b190.png)
