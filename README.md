@@ -1,5 +1,9 @@
 # uBO-Extra
 
+**Important:** As of October 20, 2020, uBO-Extra is discontinued and is no longer present in the Chrome Web store. Instart Logic's anti-user agent technology appears to have gone away and consequently the extension has become useless, as its main purpose was to foil Instart Logic's 3rd parties obfuscation technology.
+
+---
+
 A companion extension to [uBlock Origin](https://github.com/gorhill/uBlock): to gain ability to foil early anti-user mechanisms working around content blockers or even a browser privacy settings.
 
 The extension is useful only for Chromium-based browsers. There is no need for such an extension so far on Firefox, and thus there is no version for Firefox.
